@@ -15,5 +15,5 @@ jobs:
         with:
           python-version: 3.x
       - run: pip install -r requirements.txt
-      - run: python3 maker.py --api-key={{ secrets.SEAFILE_API_KEY }}
+      - run: python3 maker.py --api-key=${{ secrets.SEAFILE_API_KEY }}
       - run: cd output && mkdocs gh-deploy --force
