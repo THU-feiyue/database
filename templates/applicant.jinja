@@ -1,0 +1,90 @@
+---
+title: {{ applicant.ID }}{% if "__terms" in applicant %} ({{ applicant["__terms"] }}){% endif %}
+{% for k, v in metadata %}
+{{ k }}: {{ v }}
+{% endfor %}
+---
+
+<style>
+ul.two-col {
+  columns: 2;
+  -webkit-columns: 2;
+  -moz-columns: 2;
+}
+</style>
+
+## 基本信息
+
+<ul class="two-col">
+{% if "专业" in applicant and applicant["专业"]|length > 0 -%}
+<li><b>专业</b>：<a href="major/{{ applicant["专业"][0] }}">{{ majors[applicant["专业"][0]]["院系/专业"] }}</a></li>
+{%- endif %}
+
+{% if "GPA" in applicant -%}
+<li><b>GPA</b>：{{ applicant["GPA"] }}</li>
+{%- endif %}
+
+{% if "排名" in applicant -%}
+<li><b>排名</b>：{{ applicant["排名"] }}</li>
+{%- endif %}
+
+{% if "科研段数" in applicant -%}
+<li><b>科研段数</b>：{{ applicant["科研段数"] }}</li>
+{%- endif %}
+
+{% if "TOEFL/IELTS 总分" in applicant -%}
+<li><b>TOEFL/IELTS</b>：{{ applicant["TOEFL/IELTS 总分"] }}{% if "TOEFL/IELTS 阅读" in applicant %} (R{{ applicant["TOEFL/IELTS 阅读"] }}, L{{ applicant["TOEFL/IELTS 听力"] }}, S{{ applicant["TOEFL/IELTS 口语"] }}, W{{ applicant["TOEFL/IELTS 写作"] }}){%- endif %}
+</li>
+{%- endif %}
+
+{% if "GRE 总分" in applicant -%}
+<li><b>GRE</b>：{{ applicant["GRE 总分"] }}{% if "GRE Quantitative" in applicant %} (V{{ applicant["GRE Verbal"] }}, Q{{ applicant["GRE Quantitative"] }}, W{{ applicant["GRE Writing"] }}){%- endif %}
+</li>
+{%- endif %}
+
+{% if "联系方式" in applicant -%}
+<li><b>联系方式</b>：{{ applicant["联系方式"] }}</li>
+{%- endif %}
+
+{% if "可提供的帮助" in applicant -%}
+<li><b>可提供的帮助</b>：{{ applicant["可提供的帮助"]|join(", ") }}</li>
+{%- endif %}
+
+</ul>
+
+{% if "科研/实习经历" in applicant -%}
+**科研/实习经历**
+
+{{ applicant["科研/实习经历"] }}
+{%- endif %}
+
+{% if "推荐信#1" in applicant or "推荐信#2" in applicant or "推荐信#3" in applicant -%}
+**推荐信**
+
+{% if "推荐信#1" in applicant -%}
+1. {{ applicant["推荐信#1"]|join(", ") }}
+{%- endif %}
+{% if "推荐信#2" in applicant -%}
+2. {{ applicant["推荐信#2"]|join(", ") }}
+{%- endif %}
+{% if "推荐信#3" in applicant -%}
+3. {{ applicant["推荐信#3"]|join(", ") }}
+{%- endif %}
+
+{%- endif %}
+
+{% if "数据点" in applicant -%}
+## 申请项目
+
+| 项目 | 结果 |
+| --- | --- |
+{% for datapoint in applicant["数据点"] -%}
+| [{{ programs[datapoints[datapoint]["项目"][0]]["学校@项目"] }}](program/{{ datapoints[datapoint]["ID"] }}) | {{ datapoints[datapoint]["结果"] }} |
+{% endfor %}
+{%- endif %}
+
+{% if "申请总结" in applicant -%}
+## 申请总结
+
+{{ applicant["申请总结"] }}
+{%- endif %}

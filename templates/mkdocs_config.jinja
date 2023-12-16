@@ -1,0 +1,28 @@
+site_name: THU Feiyue
+site_url: https://liang2kl.github.io/feiyue-maker/
+repo_url: https://github.com/liang2kl/feiyue-maker/
+repo_name: liang2kl/feiyue-maker
+edit_uri: ""
+
+theme:
+  name: material
+  language: zh
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - toc:
+      permalink: true
+
+nav:
+  - index.md
+  - 申请人: [
+    {% for applicant in applicants -%}
+        "applicant/{{ applicant }}.md"{% if loop.index != applicants|length %},{% endif %}
+    {%- endfor %}
+  ]
+
+plugins:
+  - awesome-pages
+  - search
