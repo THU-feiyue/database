@@ -1,6 +1,8 @@
 import argparse
 import requests
 import os
+import shutil
+import glob
 from datetime import timezone, datetime, timedelta
 import statistics
 from pathlib import Path
@@ -453,3 +455,9 @@ if __name__ == "__main__":
         pass
     with open(mkdocs_docs_dir / "program" / "index.md", "w") as f:
         pass
+
+    for file in glob.glob(str(file_path / "resources" / "*")):
+        if os.path.isfile(file):
+            shutil.copy(file, output_dir)
+        elif os.path.isdir(file):
+            shutil.copytree(file, output_dir / os.path.basename(file))

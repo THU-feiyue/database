@@ -10,6 +10,10 @@ theme:
   language: zh
   features:
     - navigation.tabs
+    - navigation.indexes
+    - announce.dismiss
+  custom_dir: overrides
+
   palette: 
     - media: "(prefers-color-scheme)"
       toggle:
@@ -32,6 +36,9 @@ markdown_extensions:
   - pymdownx.superfences
   - toc:
       permalink: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
   - attr_list
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
@@ -41,7 +48,7 @@ markdown_extensions:
 nav:
   - index.md
   - 申请案例: [
-    "目录": "applicant/index.md",
+    "applicant/index.md",
     {% for (year, term), term_applicants in applicants_by_term %}
     {
         "{{ year }} {{ term }}":
