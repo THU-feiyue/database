@@ -1,23 +1,18 @@
+{%- from "macros.jinja" import get_applicant_desc -%}
 ---
-title: {{ applicant.ID }}{% if "__terms" in applicant %} ({{ applicant["__terms"] }}){% endif %}
+title: {{ get_applicant_desc(applicant, majors[applicant["专业"][0]]["院系"]) }}
 {% for k, v in metadata %}
 {{ k }}: {{ v }}
 {% endfor %}
 ---
 
-<style>
-ul.two-col {
-  columns: 2;
-  -webkit-columns: 2;
-  -moz-columns: 2;
-}
-</style>
-
 ## 基本信息
 
-<ul class="two-col">
+<div class="grid cards" markdown>
+
+<ul markdown>
 {% if "专业" in applicant and applicant["专业"]|length > 0 -%}
-<li><b>专业</b>：<a href="major/{{ applicant["专业"][0] }}">{{ majors[applicant["专业"][0]]["院系/专业"] }}</a></li>
+<li markdown><b>专业</b>：[{{ majors[applicant["专业"][0]]["院系/专业"] }}](../major/{{ majors[applicant["专业"][0]]["ID"] }}.md)</li>
 {%- endif %}
 
 {% if "GPA" in applicant -%}
@@ -52,6 +47,9 @@ ul.two-col {
 
 </ul>
 
+</div>
+
+
 {% if "科研/实习经历" in applicant -%}
 **科研/实习经历**
 
@@ -76,10 +74,12 @@ ul.two-col {
 {% if "数据点" in applicant -%}
 ## 申请项目
 
-| 项目 | 结果 |
-| --- | --- |
+| 项目 | 学期 | 结果 |
+| --- | --- | --- |
 {% for datapoint in applicant["数据点"] -%}
-| [{{ programs[datapoints[datapoint]["项目"][0]]["学校@项目"] }}](program/{{ datapoints[datapoint]["ID"] }}) | {{ datapoints[datapoint]["结果"] }} |
+{%- set admit = datapoints[datapoint]["结果"] == "Admit" -%}
+{%- set reject = datapoints[datapoint]["结果"] == "Reject" -%}
+| [{{ programs[datapoints[datapoint]["项目"][0]]["学校@项目"] }}](../../program/{{ datapoints[datapoint]["ID"] }}) | {{ datapoints[datapoint]["学年"] }}{{ datapoints[datapoint]["学期"] }} | {% if admit %}:green_circle:{% elif reject %}:red_circle:{% else %}:blue_circle:{% endif %} {{ datapoints[datapoint]["结果"] }} |
 {% endfor %}
 {%- endif %}
 

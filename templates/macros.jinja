@@ -1,0 +1,3 @@
+{% macro get_applicant_desc(applicant, major, show_term=true) %}
+{%- if "姓名/昵称" in applicant %}{{ applicant["姓名/昵称"] }}{% else %}{{ applicant["ID"] }}{% endif %}{% if major %} - {{ major }}{% endif %}{% if show_term and applicant["__term"][0] %} - {{ applicant["__term"][0] }}{{ applicant["__term"][1] }}{% endif -%}
+{% endmacro %}

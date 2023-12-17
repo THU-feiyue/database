@@ -7,6 +7,10 @@ edit_uri: ""
 theme:
   name: material
   language: zh
+  features:
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tabs
 
 markdown_extensions:
   - admonition
@@ -14,12 +18,22 @@ markdown_extensions:
   - pymdownx.superfences
   - toc:
       permalink: true
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - md_in_html
 
 nav:
   - index.md
   - 申请人: [
     {% for applicant in applicants -%}
         "applicant/{{ applicant }}.md"{% if loop.index != applicants|length %},{% endif %}
+    {%- endfor %}
+  ]
+  - 专业: [
+    {% for major in majors -%}
+        "major/{{ major }}.md"{% if loop.index != majors|length %},{% endif %}
     {%- endfor %}
   ]
 
