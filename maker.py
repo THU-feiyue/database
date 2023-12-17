@@ -164,27 +164,31 @@ if __name__ == "__main__":
     for id, major in all_majors.items():
         if not _major_valid(major):
             major_invalid.append(major["_id"])
-        else:
-            invalid_major_applicants = [
-                applicant
-                for applicant in major.get("申请人", [])
-                if applicant in applicant_invalid
-            ]
-            for applicant in invalid_major_applicants:
-                major["申请人"].remove(applicant)
+            continue
+        invalid_major_applicants = [
+            applicant
+            for applicant in major.get("申请人", [])
+            if applicant in applicant_invalid
+        ]
+        for applicant in invalid_major_applicants:
+            major["申请人"].remove(applicant)
+        if not _major_valid(major):
+            major_invalid.append(major["_id"])
 
     # program
     for id, program in all_programs.items():
         if not _program_valid(program):
             program_invalid.add(program["_id"])
-        else:
-            invalid_program_datapoints = [
-                datapoint
-                for datapoint in program.get("数据点", [])
-                if datapoint in datapoint_invalid
-            ]
-            for datapoint in invalid_program_datapoints:
-                program["数据点"].remove(datapoint)
+            continue
+        invalid_program_datapoints = [
+            datapoint
+            for datapoint in program.get("数据点", [])
+            if datapoint in datapoint_invalid
+        ]
+        for datapoint in invalid_program_datapoints:
+            program["数据点"].remove(datapoint)
+        if not _program_valid(program):
+            program_invalid.append(program["_id"])
 
     # remove
     for id in applicant_invalid:
