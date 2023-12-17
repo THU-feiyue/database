@@ -6,9 +6,9 @@ title: {{ major["院系/专业"] }}
 <div class="grid cards" markdown>
 
 - :material-archive: **总案例数** &nbsp;{{ major["申请人"]|length}}
-- :material-alpha-g-box: **GPA 中位数** &nbsp;{% if major["__gpa_median"] != None %}{{ major["__gpa_median"] }}{% else %}N/A{% endif %}
+- :material-chart-bar: **GPA 中位数** &nbsp;{% if major["__gpa_median"] != None %}{{ major["__gpa_median"] }}{% else %}N/A{% endif %}
 - :material-star: **最多申请** &nbsp;{% if major["__programs"]|length > 0 %}{{ get_program_link(programs[major["__programs"][0][0]]) }}{% else %}N/A{% endif %}
-- :material-align-vertical-center: **人均申请** &nbsp;{% if major["__program_count"] > 0%}{{ major["__program_count"] / major["申请人"]|length }} 个项目{% else %}N/A{% endif %}
+- :material-format-list-numbered: **人均申请** &nbsp;{% if major["__program_count"] > 0%}{{ major["__program_count"] / major["申请人"]|length }} 个项目{% else %}N/A{% endif %}
 
 </div>
 

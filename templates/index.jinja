@@ -1,0 +1,64 @@
+---
+title: 主页
+---
+
+<style>
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  height: 100%;
+}
+.button {
+    margin-top: 1em;
+}
+</style>
+
+{%- macro create_card(title, desc, button_text, button_dest, external=false) -%}
+<li markdown>
+<div class="flex-container" markdown>
+<div markdown>
+<big><b>{{ title }}</b></big><br>
+{{ desc }}
+</div>
+<div markdown class="button">
+<a href="{{ button_dest }}" {% if external %}target="_blank"{% endif %} markdown>{{ button_text }}</a>
+</div>
+</div>
+</li>
+
+{%- endmacro %}
+
+欢迎阅读清华大学飞跃手册！这是一个收集并展示清华大学学生申请案例的数据库，旨在帮助同学们更好地了解往届同学的申请情况，为自己的申请提供参考。我们将申请案例进行了归类，您可以按照自己的需求查看不同专业、不同项目的申请情况。
+
+祝您申请顺利！
+
+
+<div class="grid cards" markdown>
+<ul markdown>
+
+{{ create_card("申请案例/总结", "查看全部 " + applicant_num|string +" 个申请人的背景，申请结果，以及他们的申请总结。", "查看 :material-arrow-right:", "./applicant") }}
+{{ create_card("按专业查看", "查看全部 " + major_num|string +" 个本科专业的申请案例。", "查看 :material-arrow-right:", "./major") }}
+{{ create_card("按项目查看", "查看全部 " + program_num|string +" 个项目的申请情况及申请项目同学的案例。", "查看 :material-arrow-right:", "./program") }}
+{{ create_card("查看完整数据库", "浏览实时存储于 SeaTable 上的原始数据，根据需要筛选、分析数据。", "前往 :material-arrow-top-right:", "https://cloud.seatable.io/dtable/external-links/custom/thu-feiyue/", true) }}
+
+</ul>
+</div>
+
+## 贡献数据
+
+**本文档十分欢迎并且非常需要您的贡献！**我们为了方便贡献数据，简化了提交数据的流程——您只需要填写一个在线表格即可。
+
+本文档并不依赖于手动编写的 Markdown 文档，而是依赖于保存到 SeaTable 数据库中的数据——这使得对数据进行分类、分析成为可能。本文档 2 小时自动更新一次，更新时会从 SeaTable 数据库中读取最新数据，并生成对应的网页。
+
+如果您想要贡献数据，请按照下面的步骤进行：
+
+<div class="grid cards" markdown>
+<ul markdown>
+
+{{ create_card("第一步：创建个人资料", "创建个人资料，只需填写一次。创建后可以点击「修改个人资料」更改。[查看帮助]()", "填写 :material-arrow-top-right:", "https://cloud.seatable.io/dtable/forms/b0691605-791c-4504-b07e-6f3c89b4165e/", true) }}
+{{ create_card("第二步：提交/修改数据点", "添加/修改申请的项目，并与个人资料链接。提交的数据点与账号相关联，只能修改自己创建的数据点。[查看帮助]()", "填写 :material-arrow-top-right:", "https://cloud.seatable.io/dtable/collection-tables/2695773c-aa8e-4f14-a95f-e6acd9cf010d/", true) }}
+{{ create_card("后续：修改个人资料/增加总结", "修改个人资料，或在申请季结束后增加申请总结。", "填写 :material-arrow-top-right:", "https://cloud.seatable.io/dtable/collection-tables/304f1ac0-eb9c-4e91-8794-72e98bbbb383/", true) }}
+
+</ul>
+</div>

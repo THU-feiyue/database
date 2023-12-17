@@ -1,0 +1,11 @@
+# 申请案例 - 目录
+
+{%- from "macros.jinja" import get_applicant_link -%}
+
+{% for (year, term), term_applicants in applicants_by_term %}
+#### {{ year }} {{ term }}
+
+{% for applicant in term_applicants -%}
+- {{ get_applicant_link(applicants[applicant]) }}
+{% endfor %}
+{%- endfor %}

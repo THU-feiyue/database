@@ -23,6 +23,10 @@ title: {{ get_applicant_desc(applicant, majors[applicant["专业"][0]]["院系"]
 <li><b>排名</b>：{{ applicant["排名"] }}</li>
 {%- endif %}
 
+{% if "申请方向" in applicant -%}
+<li><b>申请方向</b>：{{ applicant["申请方向"] }}</li>
+{%- endif %}
+
 {% if "科研段数" in applicant -%}
 <li><b>科研段数</b>：{{ applicant["科研段数"] }}</li>
 {%- endif %}

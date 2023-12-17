@@ -1,8 +1,9 @@
-site_name: THU Feiyue
+site_name: 清华大学飞跃手册
 site_url: https://liang2kl.github.io/feiyue-maker/
 repo_url: https://github.com/liang2kl/feiyue-maker/
 repo_name: liang2kl/feiyue-maker
 edit_uri: ""
+copyright: 更新于 {{ build_time }}
 
 theme:
   name: material
@@ -11,6 +12,21 @@ theme:
     - navigation.instant
     - navigation.instant.progress
     - navigation.tabs
+  palette: 
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default 
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
 
 markdown_extensions:
   - admonition
@@ -26,16 +42,20 @@ markdown_extensions:
 
 nav:
   - index.md
-  - 申请人: {
+  - 申请案例: [
+    "目录": "applicant/index.md",
     {% for (year, term), term_applicants in applicants_by_term %}
-        {{ year }} {{ term }}:
+    {
+        "{{ year }} {{ term }}":
             [
                 {% for applicant in term_applicants -%}
                     "applicant/{{ all_applicants[applicant]["ID"] }}.md"{% if loop.index != term_applicants|length %},{% endif %}
                 {%- endfor %}
             ]
-    {%- endfor %}
     }
+    {% if loop.index != applicants_by_term|length %},{% endif %}
+    {%- endfor %}
+  ]
   - 专业: [
     {% for major in majors -%}
         "major/{{ major }}.md"{% if loop.index != majors|length %},{% endif %}
@@ -50,3 +70,7 @@ nav:
 plugins:
   - awesome-pages
   - search
+  - redirects:
+      redirect_maps:
+        major/index.md: major/{{ majors[0] }}.md
+        program/index.md: program/{{ programs[0] }}.md

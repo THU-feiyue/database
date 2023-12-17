@@ -1,12 +1,12 @@
 import argparse
 import requests
 import os
-import shutil
+from datetime import timezone, datetime, timedelta
 import statistics
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 
-api_base = "https://cloud.seatable.io/dtable-server/api/v1"
+api_base = None
 api_key = None
 base_token = None
 dtable_uuid = None
@@ -106,8 +106,12 @@ if __name__ == "__main__":
     # get all datapoints
     all_datapoints = _get_all_rows("数据点")
 
-    # get the terms that each applicant applied for
+    # get the terms that each applicant applied for & update nickname
     for applicant in all_applicants.values():
+        if "姓名/昵称" not in applicant:
+            new_nickname = "申请人" + str(int(applicant["ID"].split("-")[1]))
+            applicant["姓名/昵称"] = new_nickname
+
         last_year, last_term = None, None
         latest_term_value = 0
         for datapoint in applicant.get("数据点", []):
@@ -152,6 +156,8 @@ if __name__ == "__main__":
     major_template = env.get_template("major.jinja")
     program_template = env.get_template("program.jinja")
     mkdocs_template = env.get_template("mkdocs_config.jinja")
+    index_template = env.get_template("index.jinja")
+    applicant_index_template = env.get_template("applicant_index.jinja")
 
     output_dir = Path(args.output_dir)
     output_dir.mkdir(exist_ok=True)
@@ -292,8 +298,33 @@ if __name__ == "__main__":
         applicants_by_term=applicants_by_term,
         majors=[x["ID"] for x in sorted_majors],
         programs=[x["ID"] for x in sorted_programs],
+        build_time=datetime.now(tz=timezone(timedelta(hours=+8))).strftime(
+            "%Y年%m月%d日 %H:%M (UTC+8)"
+        ),
     )
     with open(output_dir / "mkdocs.yml", "w") as f:
         f.write(mkdocs_config)
 
-    shutil.copy(file_path / "templates" / "index.md", mkdocs_docs_dir / "index.md")
+    index_md = index_template.render(
+        applicant_num=len(all_applicants),
+        major_num=len(all_majors),
+        program_num=len(all_programs),
+    )
+    with open(mkdocs_docs_dir / "index.md", "w") as f:
+        f.write(index_md)
+
+    applicant_index_md = applicant_index_template.render(
+        applicants_by_term=applicants_by_term,
+        applicants=all_applicants,
+        majors=all_majors,
+        programs=all_programs,
+        datapoints=all_datapoints,
+    )
+    with open(mkdocs_docs_dir / "applicant" / "index.md", "w") as f:
+        f.write(applicant_index_md)
+
+    # create pseudo index pages for redirect
+    with open(mkdocs_docs_dir / "major" / "index.md", "w") as f:
+        pass
+    with open(mkdocs_docs_dir / "program" / "index.md", "w") as f:
+        pass
