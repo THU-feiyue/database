@@ -426,7 +426,7 @@ if __name__ == "__main__":
         majors=[x["ID"] for x in sorted_majors],
         programs=[x["ID"] for x in sorted_programs],
         build_time=datetime.now(tz=timezone(timedelta(hours=+8))).strftime(
-            "%Y年%m月%d日 %H:%M (UTC+8)"
+            "%Y年%m月%d日 %H:%M"
         ),
     )
     with open(output_dir / "mkdocs.yml", "w") as f:
