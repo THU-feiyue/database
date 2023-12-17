@@ -79,7 +79,7 @@ title: {{ get_applicant_desc(applicant, majors[applicant["专业"][0]]["院系"]
 {% for datapoint in applicant["数据点"] -%}
 {%- set admit = datapoints[datapoint]["结果"] == "Admit" -%}
 {%- set reject = datapoints[datapoint]["结果"] == "Reject" -%}
-| [{{ programs[datapoints[datapoint]["项目"][0]]["学校@项目"] }}](../../program/{{ datapoints[datapoint]["ID"] }}) | {{ datapoints[datapoint]["学年"] }}{{ datapoints[datapoint]["学期"] }} | {% if admit %}:green_circle:{% elif reject %}:red_circle:{% else %}:blue_circle:{% endif %} {{ datapoints[datapoint]["结果"] }} |
+| [{{ programs[datapoints[datapoint]["项目"][0]]["学校@项目"] }}](../program/{{ datapoints[datapoint]["ID"] }}) | {{ datapoints[datapoint]["学年"] }}{{ datapoints[datapoint]["学期"] }} | {% if admit %}:green_circle:{% elif reject %}:red_circle:{% else %}:blue_circle:{% endif %} {{ datapoints[datapoint]["结果"] }} |
 {% endfor %}
 {%- endif %}
 
