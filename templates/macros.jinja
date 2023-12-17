@@ -13,3 +13,9 @@
 {% macro get_applicant_link(applicant, major, show_term=true) -%}
 [{{ get_applicant_desc(applicant, major, show_term) }}](../applicant/{{ applicant["ID"] }}.md)
 {%- endmacro %}
+
+{% macro get_datapoint_status(result) -%}
+{%- set admit = result == "Admit" -%}
+{%- set reject = result == "Reject" -%}
+{%- if admit %}:green_circle:{% elif reject %}:red_circle:{% else %}:blue_circle:{% endif %} {{ result if result else "Unknown" }}
+{%- endmacro %}

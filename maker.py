@@ -78,38 +78,124 @@ def _term_converted(year: str, term: str) -> float:
     return year
 
 
-def _applicant_valid(applicant: dict) -> bool:
-    return "数据点" in applicant and len(applicant["数据点"]) > 0
+def _filter_out_invalid(
+    applicants: dict, datapoints: dict, programs: dict, majors: dict
+):
+    has_invalid = True
 
+    # dependency: applicant <-> datapoint <-> program
+    #             applicant <-> major
+    def _applicant_valid(applicant: dict) -> bool:
+        global has_invalid
+        valid = (
+            "数据点" in applicant
+            and len(applicant["数据点"]) > 0
+            and "专业" in applicant
+            and len(applicant["专业"]) > 0
+        )
+        if not valid:
+            return False
+        for datapoint in applicant["数据点"]:
+            if datapoint not in datapoints:
+                has_invalid = True
+                applicant["数据点"].remove(datapoint)
+        if applicant["专业"][0] not in majors:
+            return False
+        return True
 
-def _program_valid(program: dict) -> bool:
-    return (
-        "项目" in program
-        and len(program["项目"]) > 0
-        and "学校" in program
-        and len(program["学校"]) > 0
-    )
+    def _program_valid(program: dict) -> bool:
+        global has_invalid
+        valid = (
+            "项目" in program
+            and len(program["项目"]) > 0
+            and "学校" in program
+            and len(program["学校"]) > 0
+            and "数据点" in program
+            and len(program["数据点"]) > 0
+        )
+        if not valid:
+            return False
+        for datapoint in program["数据点"]:
+            if datapoint not in datapoints:
+                has_invalid = True
+                program["数据点"].remove(datapoint)
+        return True
 
+    def _datapoint_valid(datapoint: dict) -> bool:
+        global has_invalid
+        valid = (
+            "项目" in datapoint
+            and len(datapoint["项目"]) > 0
+            and "学年" in datapoint
+            and "学期" in datapoint
+            and len(datapoint["学期"]) > 0
+            and "申请人" in datapoint
+            and len(datapoint["申请人"]) > 0
+        )
+        if not valid:
+            return False
+        for applicant in datapoint["申请人"]:
+            if applicant not in applicants:
+                has_invalid = True
+                datapoint["申请人"].remove(applicant)
+        if datapoint["项目"][0] not in programs:
+            return False
+        return True
 
-def _datapoint_valid(datapoint: dict) -> bool:
-    return (
-        "项目" in datapoint
-        and len(datapoint["项目"]) > 0
-        and "学年" in datapoint
-        and "学期" in datapoint
-        and len(datapoint["学期"]) > 0
-        and "申请人" in datapoint
-        and len(datapoint["申请人"]) > 0
-    )
+    def _major_valid(major: dict) -> bool:
+        global has_invalid
+        valid = (
+            "院系" in major
+            and len(major["院系"]) > 0
+            and "专业" in major
+            and len(major["专业"]) > 0
+            and "申请人" in major
+            and len(major["申请人"]) > 0
+        )
+        if not valid:
+            return False
+        for applicant in major["申请人"]:
+            if applicant not in applicants:
+                has_invalid = True
+                major["申请人"].remove(applicant)
+        return True
 
+    while has_invalid:
+        has_invalid = False
+        applicant_invalid = []
+        program_invalid = []
+        datapoint_invalid = []
+        major_invalid = []
 
-def _major_valid(major: dict) -> bool:
-    return (
-        "院系" in major
-        and len(major["院系"]) > 0
-        and "专业" in major
-        and len(major["专业"]) > 0
-    )
+        # applicant
+        for applicant in applicants.values():
+            if not _applicant_valid(applicant):
+                applicant_invalid.append(applicant["_id"])
+                has_invalid = True
+        for invalid_applicant in applicant_invalid:
+            applicants.pop(invalid_applicant)
+
+        for datapoint in datapoints.values():
+            if not _datapoint_valid(datapoint):
+                datapoint_invalid.append(datapoint["_id"])
+                has_invalid = True
+        for invalid_datapoint in datapoint_invalid:
+            datapoints.pop(invalid_datapoint)
+
+        for major in majors.values():
+            if not _major_valid(major):
+                major_invalid.append(major["_id"])
+                has_invalid = True
+        for invalid_major in major_invalid:
+            majors.pop(invalid_major)
+
+        # program
+        for program in programs.values():
+            if not _program_valid(program):
+                program_invalid.append(program["_id"])
+                has_invalid = True
+        for invalid_program in program_invalid:
+            programs.pop(invalid_program)
 
 
 if __name__ == "__main__":
@@ -139,66 +225,7 @@ if __name__ == "__main__":
     all_datapoints = _get_all_rows("数据点")
 
     # filter out invalid datapoints
-    # dependency: applicant -> datapoint <- program
-    #             applicant -> major
-    has_invalid = True
-    applicant_invalid = []
-    program_invalid = []
-    datapoint_invalid = []
-    major_invalid = []
-
-    has_invalid = False
-    # applicant
-    for id, applicant in all_applicants.items():
-        if not _applicant_valid(applicant):
-            applicant_invalid.append(applicant["_id"])
-
-    for id, datapoint in all_datapoints.items():
-        if (
-            not _datapoint_valid(datapoint)
-            # datapoint - applicant is 1 to 1
-            or datapoint["申请人"][0] in applicant_invalid
-        ):
-            datapoint_invalid.append(datapoint["_id"])
-
-    for id, major in all_majors.items():
-        if not _major_valid(major):
-            major_invalid.append(major["_id"])
-            continue
-        invalid_major_applicants = [
-            applicant
-            for applicant in major.get("申请人", [])
-            if applicant in applicant_invalid
-        ]
-        for applicant in invalid_major_applicants:
-            major["申请人"].remove(applicant)
-        if not _major_valid(major):
-            major_invalid.append(major["_id"])
-
-    # program
-    for id, program in all_programs.items():
-        if not _program_valid(program):
-            program_invalid.add(program["_id"])
-            continue
-        invalid_program_datapoints = [
-            datapoint
-            for datapoint in program.get("数据点", [])
-            if datapoint in datapoint_invalid
-        ]
-        for datapoint in invalid_program_datapoints:
-            program["数据点"].remove(datapoint)
-        if not _program_valid(program):
-            program_invalid.append(program["_id"])
-
-    # remove
-    for id in applicant_invalid:
-        all_applicants.pop(id)
-    for id in program_invalid:
-        all_programs.pop(id)
-    for id in datapoint_invalid:
-        all_datapoints.pop(id)
-    for id in major_invalid:
-        all_majors.pop(id)
+    _filter_out_invalid(all_applicants, all_datapoints, all_programs, all_majors)
 
     # get the terms that each applicant applied for & update nickname
     for applicant in all_applicants.values():
@@ -224,7 +251,7 @@ if __name__ == "__main__":
         if datapoint["学年"] is None:
             continue
         applicants_by_term.setdefault((datapoint["学年"], datapoint["学期"]), set()).add(
-            datapoint["申请人"][0]
+            (datapoint["申请人"][0])
         )
 
     applicants_by_term = sorted(
@@ -353,12 +380,22 @@ if __name__ == "__main__":
         ]
 
     for program in all_programs.values():
+        # do this work outside of jinja2 -- it's too complicated
+        program_datapoints = all_datapoints.copy()
+        program_datapoints = [
+            datapoint
+            for datapoint in all_datapoints.values()
+            if datapoint["项目"][0] == program["_id"]
+        ]
+        for datapoint in program_datapoints:
+            datapoint["申请人"] = datapoint["申请人"][0]
+
         program_md = program_template.render(
             metadata={},
             program=program,
             majors=all_majors,
             applicants=all_applicants,
-            datapoints=all_datapoints,
+            program_datapoints=program_datapoints,
         )
 
         output_path = mkdocs_docs_dir / "program" / f"{program['ID']}.md"
@@ -369,20 +406,14 @@ if __name__ == "__main__":
 
     # ====================
 
-    sorted_majors = [
-        x for x in list(all_majors.values()) if "申请人" in x and len(x["申请人"]) > 0
-    ]
     sorted_majors = sorted(
-        sorted_majors,
+        list(all_majors.values()),
         key=lambda x: len(x["申请人"]),
         reverse=True,
     )
 
-    sorted_programs = [
-        x for x in list(all_programs.values()) if "数据点" in x and len(x["数据点"]) > 0
-    ]
     sorted_programs = sorted(
-        sorted_programs,
+        list(all_programs.values()),
         key=lambda x: len(x["数据点"]),
         reverse=True,
     )

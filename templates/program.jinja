@@ -1,9 +1,7 @@
-{%- from "macros.jinja" import get_applicant_link -%}
+{%- from "macros.jinja" import get_applicant_link, get_datapoint_status -%}
 ---
 title: {{ program["项目"] }}@{{ program["学校"] }}
 ---
-
-{%- set program_datapoints = datapoints | selectattr("项目", "equalto", program["_id"]) | list %}
 {%- set admitted_datapoints = program_datapoints | selectattr("结果", "equalto", "Admit") | list %}
 {%- set finalized_datapoints = program_datapoints | rejectattr("结果", "equalto", "Pending") | list %}
 
@@ -20,6 +18,7 @@ title: {{ program["项目"] }}@{{ program["学校"] }}
 **{{ year }} {{ term }}**
 
 {% for applicant in term_applicants -%}
-{{ loop.index }}. {{ get_applicant_link(applicants[applicant], majors[applicants[applicant]["专业"][0]]["院系"], false) }}
+{%- set datapoint = program_datapoints | selectattr("申请人", "equalto", applicant) | first -%}
+- {{ get_applicant_link(applicants[applicant], majors[applicants[applicant]["专业"][0]]["院系"], false) }} &nbsp;{{ get_datapoint_status(datapoint["结果"]) }}
 {% endfor %}
 {% endfor %}

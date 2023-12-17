@@ -24,6 +24,6 @@ title: {{ major["院系/专业"] }}
 **{{ year }} {{ term }}**
 
 {% for applicant in term_applicants -%}
-{{ loop.index }}. {{ get_applicant_link(applicants[applicant], "", false) }}
+- {{ get_applicant_link(applicants[applicant], "", false) }}
 {% endfor %}
 {% endfor %}
