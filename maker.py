@@ -460,4 +460,6 @@ if __name__ == "__main__":
         if os.path.isfile(file):
             shutil.copy(file, output_dir)
         elif os.path.isdir(file):
-            shutil.copytree(file, output_dir / os.path.basename(file))
+            shutil.copytree(
+                file, output_dir / os.path.basename(file), dirs_exist_ok=True
+            )
