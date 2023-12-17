@@ -78,6 +78,40 @@ def _term_converted(year: str, term: str) -> float:
     return year
 
 
+def _applicant_valid(applicant: dict) -> bool:
+    return "数据点" in applicant and len(applicant["数据点"]) > 0
+
+
+def _program_valid(program: dict) -> bool:
+    return (
+        "项目" in program
+        and len(program["项目"]) > 0
+        and "学校" in program
+        and len(program["学校"]) > 0
+    )
+
+
+def _datapoint_valid(datapoint: dict) -> bool:
+    return (
+        "项目" in datapoint
+        and len(datapoint["项目"]) > 0
+        and "学年" in datapoint
+        and "学期" in datapoint
+        and len(datapoint["学期"]) > 0
+        and "申请人" in datapoint
+        and len(datapoint["申请人"]) > 0
+    )
+
+
+def _major_valid(major: dict) -> bool:
+    return (
+        "院系" in major
+        and len(major["院系"]) > 0
+        and "专业" in major
+        and len(major["专业"]) > 0
+    )
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--api-key", type=str, required=True)
@@ -89,8 +123,6 @@ if __name__ == "__main__":
 
     api_key = args.api_key
     api_base = args.api_base
-
-    # TODO: Filtering
 
     # get base token
     print("Getting base token...", end=" ", flush=True)
@@ -105,6 +137,64 @@ if __name__ == "__main__":
     all_programs = _get_all_rows("项目")
     # get all datapoints
     all_datapoints = _get_all_rows("数据点")
+
+    # filter out invalid datapoints
+    # dependency: applicant -> datapoint <- program
+    #             applicant -> major
+    has_invalid = True
+    applicant_invalid = []
+    program_invalid = []
+    datapoint_invalid = []
+    major_invalid = []
+
+    has_invalid = False
+    # applicant
+    for id, applicant in all_applicants.items():
+        if not _applicant_valid(applicant):
+            applicant_invalid.append(applicant["_id"])
+
+    for id, datapoint in all_datapoints.items():
+        if (
+            not _datapoint_valid(datapoint)
+            # datapoint - applicant is 1 to 1
+            or datapoint["申请人"][0] in applicant_invalid
+        ):
+            datapoint_invalid.append(datapoint["_id"])
+
+    for id, major in all_majors.items():
+        if not _major_valid(major):
+            major_invalid.append(major["_id"])
+        else:
+            invalid_major_applicants = [
+                applicant
+                for applicant in major.get("申请人", [])
+                if applicant in applicant_invalid
+            ]
+            for applicant in invalid_major_applicants:
+                major["申请人"].remove(applicant)
+
+    # program
+    for id, program in all_programs.items():
+        if not _program_valid(program):
+            program_invalid.add(program["_id"])
+        else:
+            invalid_program_datapoints = [
+                datapoint
+                for datapoint in program.get("数据点", [])
+                if datapoint in datapoint_invalid
+            ]
+            for datapoint in invalid_program_datapoints:
+                program["数据点"].remove(datapoint)
+
+    # remove
+    for id in applicant_invalid:
+        all_applicants.pop(id)
+    for id in program_invalid:
+        all_programs.pop(id)
+    for id in datapoint_invalid:
+        all_datapoints.pop(id)
+    for id in major_invalid:
+        all_majors.pop(id)
 
     # get the terms that each applicant applied for & update nickname
     for applicant in all_applicants.values():
