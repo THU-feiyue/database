@@ -20,6 +20,14 @@
   IN THE SOFTWARE.
 -->
 
+<style>
+    @media (max-width: 800px) {
+        .hide-on-small {
+            display: none;
+        }
+    }
+</style>
+
 <!-- Copyright and theme information -->
 <div class="md-copyright" style="display:flex;justify-content:space-between;width:100%;align-items:center">
     {% if config.copyright %}
@@ -28,7 +36,7 @@
     </div>
     {% endif %}
     <div style="display:flex;align-items:center;column-gap:10px;">
-        <span>
+        <span class="hide-on-small">
             本文档以
             <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>
             协议发布
