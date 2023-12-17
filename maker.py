@@ -120,9 +120,37 @@ if __name__ == "__main__":
 
         applicant["__term"] = (last_year, last_term)
 
+    applicants_by_term = {}
+
+    for datapoint in all_datapoints.values():
+        if datapoint["学年"] is None:
+            continue
+        applicants_by_term.setdefault((datapoint["学年"], datapoint["学期"]), set()).add(
+            datapoint["申请人"][0]
+        )
+
+    applicants_by_term = sorted(
+        [(term, applicants) for term, applicants in applicants_by_term.items()],
+        key=lambda x: _term_converted(*x[0]),
+        reverse=True,
+    )
+
+    for i, term_tuple in enumerate(applicants_by_term):
+        applicants_by_term[i] = (
+            term_tuple[0],
+            sorted(
+                list(term_tuple[1]),
+                key=lambda x: (all_applicants[x]["ID"]),
+                reverse=False,
+            ),
+        )
+
+    # ====================
+
     env = Environment(loader=FileSystemLoader(file_path / "templates"))
     applicant_template = env.get_template("applicant.jinja")
     major_template = env.get_template("major.jinja")
+    program_template = env.get_template("program.jinja")
     mkdocs_template = env.get_template("mkdocs_config.jinja")
 
     output_dir = Path(args.output_dir)
@@ -132,18 +160,7 @@ if __name__ == "__main__":
 
     print("Generating applicant pages...", end=" ", flush=True)
 
-    applicant_keys = sorted(
-        list(all_applicants.keys()),
-        key=lambda x: (
-            _term_converted(*all_applicants[x]["__term"]),
-            all_applicants[x]["ID"],
-        ),
-        reverse=True,
-    )
-
-    for applicant_id in applicant_keys:
-        applicant = all_applicants[applicant_id]
-
+    for applicant in all_applicants.values():
         applicant_md = applicant_template.render(
             metadata={},
             applicant=applicant,
@@ -159,12 +176,25 @@ if __name__ == "__main__":
 
     print("done")
 
+    # ====================
+
     print("Generating major pages...", end=" ", flush=True)
 
     # get top programs & terms & GPA median & total programs for each major
     for major in all_majors.values():
+        major["__applicants_by_term"] = [
+            (
+                term,
+                [
+                    applicant
+                    for applicant in applicants
+                    if all_applicants[applicant]["专业"][0] == major["_id"]
+                ],
+            )
+            for term, applicants in applicants_by_term
+        ]
+
         major["__programs"] = {}
-        major["__applicants_by_term"] = {}
         major["__program_count"] = 0
         gpas = []
         for applicant in major.get("申请人", []):
@@ -174,9 +204,6 @@ if __name__ == "__main__":
                 if datapoint["项目"][0] not in major["__programs"]:
                     major["__programs"][datapoint["项目"][0]] = 0
                 major["__programs"][datapoint["项目"][0]] += 1
-                major["__applicants_by_term"].setdefault(
-                    (datapoint["学年"], datapoint["学期"]), set()
-                ).add(applicant["_id"])
                 major["__program_count"] += 1
 
             if "GPA" in applicant:
@@ -190,20 +217,6 @@ if __name__ == "__main__":
         )
 
     for major in all_majors.values():
-        # sort applicants by term
-        major["__applicants_by_term"] = sorted(
-            list(major["__applicants_by_term"].items()),
-            key=lambda x: _term_converted(*x[0]),
-            reverse=True,
-        )
-        # sort applicants in terms
-        for term, applicants in major["__applicants_by_term"]:
-            applicants = list(applicants)
-            applicants.sort(
-                key=lambda x: (all_applicants[x]["ID"]),
-                reverse=False,
-            )
-
         major_md = major_template.render(
             metadata={},
             major=major,
@@ -216,17 +229,69 @@ if __name__ == "__main__":
         output_path.parent.mkdir(exist_ok=True)
         with open(output_path, "w") as f:
             f.write(major_md)
+    print("done")
 
+    # ====================
+
+    print("Generating program pages...", end=" ", flush=True)
+
+    # get terms for each program
+    for program in all_programs.values():
+        program["__applicants_by_term"] = [
+            (
+                term,
+                [
+                    applicant
+                    for applicant in applicants
+                    if any(
+                        all_datapoints[datapoint]["项目"][0] == program["_id"]
+                        for datapoint in all_applicants[applicant]["数据点"]
+                    )
+                ],
+            )
+            for term, applicants in applicants_by_term
+        ]
+
+    for program in all_programs.values():
+        program_md = program_template.render(
+            metadata={},
+            program=program,
+            majors=all_majors,
+            applicants=all_applicants,
+            datapoints=all_datapoints,
+        )
+
+        output_path = mkdocs_docs_dir / "program" / f"{program['ID']}.md"
+        output_path.parent.mkdir(exist_ok=True)
+        with open(output_path, "w") as f:
+            f.write(program_md)
+    print("done")
+
+    # ====================
+
+    sorted_majors = [
+        x for x in list(all_majors.values()) if "申请人" in x and len(x["申请人"]) > 0
+    ]
     sorted_majors = sorted(
-        list(all_majors.values()),
-        key=lambda x: len(x["申请人"]) if "申请人" in x else 0,
+        sorted_majors,
+        key=lambda x: len(x["申请人"]),
         reverse=True,
     )
-    sorted_majors = [x for x in sorted_majors if "申请人" in x and len(x["申请人"]) > 0]
+
+    sorted_programs = [
+        x for x in list(all_programs.values()) if "数据点" in x and len(x["数据点"]) > 0
+    ]
+    sorted_programs = sorted(
+        sorted_programs,
+        key=lambda x: len(x["数据点"]),
+        reverse=True,
+    )
 
     mkdocs_config = mkdocs_template.render(
-        applicants=[all_applicants[x]["ID"] for x in applicant_keys],
+        all_applicants=all_applicants,
+        applicants_by_term=applicants_by_term,
         majors=[x["ID"] for x in sorted_majors],
+        programs=[x["ID"] for x in sorted_programs],
     )
     with open(output_dir / "mkdocs.yml", "w") as f:
         f.write(mkdocs_config)

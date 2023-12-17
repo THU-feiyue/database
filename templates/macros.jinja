@@ -1,3 +1,15 @@
-{% macro get_applicant_desc(applicant, major, show_term=true) %}
-{%- if "姓名/昵称" in applicant %}{{ applicant["姓名/昵称"] }}{% else %}{{ applicant["ID"] }}{% endif %}{% if major %} - {{ major }}{% endif %}{% if show_term and applicant["__term"][0] %} - {{ applicant["__term"][0] }}{{ applicant["__term"][1] }}{% endif -%}
-{% endmacro %}
+{% macro get_applicant_desc(applicant, major, show_term=true) -%}
+{% if "姓名/昵称" in applicant %}{{ applicant["姓名/昵称"] }}{% else %}{{ applicant["ID"] }}{% endif %}{% if major %} - {{ major }}{% endif %}{% if show_term and applicant["__term"][0] %} - {{ applicant["__term"][0] }}{{ applicant["__term"][1] }}{% endif %}
+{%- endmacro %}
+
+{% macro get_major_link(major) -%}
+[{{ major["院系/专业"] }}](../major/{{ major["ID"] }}.md)
+{%- endmacro %}
+
+{% macro get_program_link(program) -%}
+[{{ program["学校@项目"] }}](../program/{{ program["ID"] }}.md)
+{%- endmacro %}
+
+{% macro get_applicant_link(applicant, major, show_term=true) -%}
+[{{ get_applicant_desc(applicant, major, show_term) }}](../applicant/{{ applicant["ID"] }}.md)
+{%- endmacro %}

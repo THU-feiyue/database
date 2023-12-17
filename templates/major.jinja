@@ -1,3 +1,4 @@
+{%- from "macros.jinja" import get_applicant_desc, get_program_link, get_applicant_link -%}
 ---
 title: {{ major["院系/专业"] }}
 ---
@@ -6,7 +7,7 @@ title: {{ major["院系/专业"] }}
 
 - :material-archive: **总案例数** &nbsp;{{ major["申请人"]|length}}
 - :material-alpha-g-box: **GPA 中位数** &nbsp;{% if major["__gpa_median"] != None %}{{ major["__gpa_median"] }}{% else %}N/A{% endif %}
-- :material-star: **最多申请** &nbsp;{% if major["__programs"]|length > 0 %}[{{ programs[major["__programs"][0][0]]["学校@项目"] }}](../program/{{ programs[major["__programs"][0][0]]["ID"] }}.md){% else %}N/A{% endif %}
+- :material-star: **最多申请** &nbsp;{% if major["__programs"]|length > 0 %}{{ get_program_link(programs[major["__programs"][0][0]]) }}{% else %}N/A{% endif %}
 - :material-align-vertical-center: **人均申请** &nbsp;{% if major["__program_count"] > 0%}{{ major["__program_count"] / major["申请人"]|length }} 个项目{% else %}N/A{% endif %}
 
 </div>
@@ -14,17 +15,15 @@ title: {{ major["院系/专业"] }}
 ### 申请人数最多的项目
 
 {% for program in major["__programs"][:5] -%}
-{{ loop.index }}. [{{ programs[program[0]]["学校@项目"]}}](../program/{{ programs[program[0]]["ID"] }}.md) - {{ program[1] }} 人
+{{ loop.index }}. {{ get_program_link(programs[program[0]]) }} - {{ program[1] }} 人
 {% endfor %}
 
 ### 申请案例
-{%- from "macros.jinja" import get_applicant_desc %}
-
-{% for (year, term), term_applicants in major["__applicants_by_term"]%}
+{% for (year, term), term_applicants in major["__applicants_by_term"] %}
 
 **{{ year }} {{ term }}**
 
 {% for applicant in term_applicants -%}
-{{ loop.index }}. [{{ get_applicant_desc(applicants[applicant], "", false) }}](../applicant/{{ applicants[applicant]["ID"] }}.md)
+{{ loop.index }}. {{ get_applicant_link(applicants[applicant], "", false) }}
 {% endfor %}
 {% endfor %}

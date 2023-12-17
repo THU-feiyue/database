@@ -26,14 +26,24 @@ markdown_extensions:
 
 nav:
   - index.md
-  - 申请人: [
-    {% for applicant in applicants -%}
-        "applicant/{{ applicant }}.md"{% if loop.index != applicants|length %},{% endif %}
+  - 申请人: {
+    {% for (year, term), term_applicants in applicants_by_term %}
+        {{ year }} {{ term }}:
+            [
+                {% for applicant in term_applicants -%}
+                    "applicant/{{ all_applicants[applicant]["ID"] }}.md"{% if loop.index != term_applicants|length %},{% endif %}
+                {%- endfor %}
+            ]
     {%- endfor %}
-  ]
+    }
   - 专业: [
     {% for major in majors -%}
         "major/{{ major }}.md"{% if loop.index != majors|length %},{% endif %}
+    {%- endfor %}
+  ]
+  - 项目: [
+    {% for program in programs -%}
+        "program/{{ program }}.md"{% if loop.index != programs|length %},{% endif %}
     {%- endfor %}
   ]
 

@@ -1,0 +1,25 @@
+{%- from "macros.jinja" import get_applicant_link -%}
+---
+title: {{ program["项目"] }}@{{ program["学校"] }}
+---
+
+{%- set program_datapoints = datapoints | selectattr("项目", "equalto", program["_id"]) | list %}
+{%- set admitted_datapoints = program_datapoints | selectattr("结果", "equalto", "Admit") | list %}
+{%- set finalized_datapoints = program_datapoints | rejectattr("结果", "equalto", "Pending") | list %}
+
+<div class="grid cards" markdown>
+
+- :material-archive: **总案例数** &nbsp;{{ program["数据点"]|length}}
+- :material-checkbox-marked-circle: **录取率** &nbsp;{% if finalized_datapoints | length > 0 %}{{ 100 * admitted_datapoints | length // finalized_datapoints | length }}%{% else %}N/A{% endif %}
+
+</div>
+
+### 申请案例
+{% for (year, term), term_applicants in program["__applicants_by_term"]%}
+
+**{{ year }} {{ term }}**
+
+{% for applicant in term_applicants -%}
+{{ loop.index }}. {{ get_applicant_link(applicants[applicant], majors[applicants[applicant]["专业"][0]]["院系"], false) }}
+{% endfor %}
+{% endfor %}
