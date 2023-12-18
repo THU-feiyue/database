@@ -1,4 +1,4 @@
-{%- from "macros.jinja" import get_applicant_link, get_datapoint_status -%}
+{%- from "macros.jinja" import get_applicant_link, get_datapoint_status, get_program_icon -%}
 ---
 title: {{ program["项目"] }}@{{ program["学校"] }}
 ---
@@ -9,6 +9,7 @@ title: {{ program["项目"] }}@{{ program["学校"] }}
 
 - :material-archive: **总案例数** &nbsp;{{ program["数据点"]|length}}
 - :material-checkbox-marked-circle: **录取率** &nbsp;{% if finalized_datapoints | length > 0 %}{{ 100 * admitted_datapoints | length // finalized_datapoints | length }}%{% else %}N/A{% endif %}
+- {{ get_program_icon(program) }} **类别** &nbsp;{{ program["类别"] }}
 
 </div>
 

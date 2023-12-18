@@ -3,5 +3,5 @@
 {%- from "macros.jinja" import get_program_link %}
 
 {% for program in programs -%}
-- {{ get_program_link(program) }} {{ program["数据点"] | length }} 个数据点
+- {{ get_program_link(program, show_icon=true) }} {{ program["数据点"] | length }} 个数据点
 {% endfor %}
