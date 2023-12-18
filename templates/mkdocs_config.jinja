@@ -1,4 +1,4 @@
-site_name: 清华大学飞跃手册
+site_name: 清华大学飞跃数据库
 site_url: https://liang2kl.github.io/feiyue-maker/
 repo_url: https://github.com/liang2kl/feiyue-maker/
 repo_name: liang2kl/feiyue-maker
@@ -35,6 +35,7 @@ theme:
 
 markdown_extensions:
   - admonition
+  - pymdownx.details
   - pymdownx.highlight
   - pymdownx.superfences
   - toc:
@@ -49,7 +50,9 @@ markdown_extensions:
   - md_in_html
 
 nav:
-  - index.md
+  - 主页:
+    - index.md
+    - faq.md
   - 申请案例: [
     "applicant/index.md",
     {% for (year, term), term_applicants in applicants_by_term %}

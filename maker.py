@@ -1,5 +1,5 @@
 import argparse
-import requests
+import json
 import os
 import shutil
 import glob
@@ -18,15 +18,50 @@ if __name__ == "__main__":
         "--api-base", type=str, default="https://cloud.seatable.io/dtable-server/api/v1"
     )
     parser.add_argument("--output-dir", type=str, default="output")
+    parser.add_argument("--link-resources", action="store_true")
+    parser.add_argument("--cached", action="store_true")
     args = parser.parse_args()
 
     api_key = args.api_key
     backend.api.api_base = args.api_base
 
-    print("Getting all rows...")
-    all_applicants, all_datapoints, all_programs, all_majors = backend.get_all_rows(
-        api_key
-    )
+    cache_loaded = False
+    cache_dir = file_path / ".cache"
+
+    if args.cached:
+
+        def load_cache(file_name: Path):
+            with open(cache_dir / file_name, "r") as f:
+                return json.load(f)
+
+        # check if is cached already
+        if os.path.isdir(file_path / ".cache"):
+            print("Loading rows from cache...")
+            try:
+                all_applicants = load_cache("applicants.json")
+                all_datapoints = load_cache("datapoints.json")
+                all_programs = load_cache("programs.json")
+                all_majors = load_cache("majors.json")
+                cache_loaded = True
+            except:
+                shutil.rmtree(file_path / ".cache")
+
+    if not cache_loaded:
+        print("Getting all rows...")
+        all_applicants, all_datapoints, all_programs, all_majors = backend.get_all_rows(
+            api_key
+        )
+        if args.cached:
+            cache_dir.mkdir(exist_ok=True)
+            with open(cache_dir / "applicants.json", "w") as f:
+                json.dump(all_applicants, f)
+            with open(cache_dir / "datapoints.json", "w") as f:
+                json.dump(all_datapoints, f)
+            with open(cache_dir / "programs.json", "w") as f:
+                json.dump(all_programs, f)
+            with open(cache_dir / "majors.json", "w") as f:
+                json.dump(all_majors, f)
+
     print(
         "Done, got",
         len(all_applicants),
@@ -232,10 +267,22 @@ if __name__ == "__main__":
     with open(mkdocs_docs_dir / "program" / "index.md", "w") as f:
         pass
 
-    for file in glob.glob(str(file_path / "resources" / "*")):
-        if os.path.isfile(file):
-            shutil.copy(file, output_dir)
-        elif os.path.isdir(file):
+    # copy or link resources
+    with open(file_path / "resources" / "manifest.json", "r") as f:
+        manifest: dict = json.load(f)
+
+    for src, dest in manifest["mappings"].items():
+        if args.link_resources:
+            if os.path.exists(output_dir / dest):
+                os.remove(output_dir / dest)
+            os.symlink(file_path / "resources" / src, output_dir / dest)
+        elif os.path.isfile(file_path / "resources" / src):
+            shutil.copy(file_path / "resources" / src, output_dir / dest)
+        elif os.path.isdir(file_path / "resources" / src):
             shutil.copytree(
-                file, output_dir / os.path.basename(file), dirs_exist_ok=True
+                file_path / "resources" / src,
+                output_dir / dest,
+                dirs_exist_ok=True,
             )
+        else:
+            raise Exception(f"Resource {src} not exist")
