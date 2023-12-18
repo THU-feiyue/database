@@ -6,12 +6,13 @@ title: {{ program["项目"] }}@{{ program["学校"] }}
 # {{ program["项目"] }}@{{ program["学校"] }} `{{ program["类别"] }}`
 
 {%- set admitted_datapoints = program_datapoints | selectattr("结果", "equalto", "Admit") | list %}
-{%- set finalized_datapoints = program_datapoints | rejectattr("结果", "equalto", "Pending") | list %}
+{%- set reject_datapoints = program_datapoints | selectattr("结果", "equalto", "Reject") | list %}
+{%- set finalized_datapoints_num = admitted_datapoints | length + reject_datapoints | length %}
 
 <div class="grid cards" markdown>
 
-- :material-archive: **总案例数** &nbsp;{{ program["数据点"]|length}}
-- :material-checkbox-marked-circle: **录取率** &nbsp;{% if finalized_datapoints | length > 0 %}{{ 100 * admitted_datapoints | length // finalized_datapoints | length }}%{% else %}N/A{% endif %}
+- :material-archive: **总案例数** &nbsp;{{ program_datapoints | length }}<sub> = {{ admitted_datapoints | length }}<sub>Ad</sub> + {{ reject_datapoints | length }}<sub>Rej</sub> + {{ program_datapoints | length - finalized_datapoints_num }}<sub>Pending</sub> </sub>
+- :material-checkbox-marked-circle: **录取率** &nbsp;{% if finalized_datapoints_num > 0 %}{{ 100 * admitted_datapoints | length // finalized_datapoints_num }}%{% else %}N/A{% endif %}
 
 </div>
 

@@ -3,7 +3,7 @@
 {%- endmacro %}
 
 {% macro get_major_link(major, show_dept=true) -%}
-[{{ major["专业"] }}{% if show_dept %} - {{ major["院系"] }}{% endif %}](../major/{{ major["ID"] }}.md)
+[{{ major["专业"] }}{% if show_dept %}（{{ major["院系"] }}）{% endif %}](../major/{{ major["ID"] }}.md)
 {%- endmacro %}
 
 {% macro get_program_icon(program) -%}
