@@ -7,7 +7,7 @@
 {%- endmacro %}
 
 {% macro get_program_icon(program) -%}
-{% if program["类别"] == "PhD" -%}:material-alpha-p-box:{% elif program["类别"] == "Master" %}:material-alpha-m-circle-outline:{%- endif %}
+{% if program["类别"] == "PhD" -%}<sup><code>PhD</code></sup>{% elif program["类别"] == "Master" %}<sup><code>Master</code></sup>{%- endif %}
 {%- endmacro %}
 
 {% macro get_program_link(program, show_icon=true) -%}

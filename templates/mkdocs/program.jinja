@@ -1,7 +1,10 @@
-{%- from "macros.jinja" import get_applicant_link, get_datapoint_status, get_program_icon -%}
+{%- from "macros.jinja" import get_applicant_link, get_datapoint_status, get_program_icon, get_major_link -%}
 ---
 title: {{ program["项目"] }}@{{ program["学校"] }}
 ---
+
+# {{ program["项目"] }}@{{ program["学校"] }} `{{ program["类别"] }}`
+
 {%- set admitted_datapoints = program_datapoints | selectattr("结果", "equalto", "Admit") | list %}
 {%- set finalized_datapoints = program_datapoints | rejectattr("结果", "equalto", "Pending") | list %}
 
@@ -9,7 +12,6 @@ title: {{ program["项目"] }}@{{ program["学校"] }}
 
 - :material-archive: **总案例数** &nbsp;{{ program["数据点"]|length}}
 - :material-checkbox-marked-circle: **录取率** &nbsp;{% if finalized_datapoints | length > 0 %}{{ 100 * admitted_datapoints | length // finalized_datapoints | length }}%{% else %}N/A{% endif %}
-- {{ get_program_icon(program) }} **类别** &nbsp;{{ program["类别"] }}
 
 </div>
 
@@ -18,9 +20,12 @@ title: {{ program["项目"] }}@{{ program["学校"] }}
 {%- if term_applicants|length > 0%}
 **{{ year }} {{ term }}**
 
+| 申请人 | 专业 | 院系 | 结果 |
+| --- | --- | --- | --- |
 {% for applicant in term_applicants -%}
 {%- set datapoint = program_datapoints | selectattr("申请人", "equalto", applicant) | first -%}
-- {{ get_applicant_link(applicants[applicant], majors[applicants[applicant]["专业"][0]]["院系"], false) }} &nbsp;{{ get_datapoint_status(datapoint["结果"]) }}
+{%- set major = majors[applicants[applicant]["专业"][0]] -%}
+{{ get_applicant_link(applicants[applicant], "", false) }} | {{ get_major_link(major, show_dept=false) }} | {{ major["院系"] }} | {{ get_datapoint_status(datapoint["结果"]) }}{%- if datapoint["最终去向"] %} [最终去向]{% endif %}
 {% endfor %}
 {% endif %}
 {% endfor %}

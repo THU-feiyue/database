@@ -75,8 +75,16 @@ nav:
   ]
   - 项目: [
     "program/index.md",
-    {% for program in programs -%}
-        "program/{{ program }}.md"{% if loop.index != programs|length %},{% endif %}
+    {% for school, school_programs in programs | groupby("学校") -%}
+    {
+        "{{ school }}":
+            [
+                {% for program in school_programs -%}
+                    "program/{{ program["ID"] }}.md"{% if loop.index != school_programs|length %},{% endif %}
+                {%- endfor %}
+            ]
+    }
+    {% if loop.index != programs|length %},{% endif %}
     {%- endfor %}
   ]
 
