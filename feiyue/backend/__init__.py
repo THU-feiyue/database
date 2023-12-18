@@ -14,19 +14,13 @@ def get_all_rows(api_key: str) -> tuple[dict, dict, dict, dict]:
     return all_applicants, all_datapoints, all_programs, all_majors
 
 
-def _term_converted(year: str, term: str) -> float:
+def term_value(year: int, term: str) -> float:
     if year is None:
         return 0
 
     year = int(year)
-    if term == "Spring":
-        year += 0.1
-    elif term == "Summer":
-        year += 0.2
-    elif term == "Fall":
-        year += 0.3
-    elif term == "Winter":
-        year += 0.4
+    terms = ["Spring", "Summer", "Fall", "Winter"]
+    year += (terms.index(term) + 1) / 10
 
     return year
 
@@ -151,48 +145,13 @@ def filter_out_invalid(
             programs.pop(invalid_program)
 
 
-def get_applicants_by_term(datapoints: dict, applicants: dict) -> dict:
-    applicants_by_term = {}
-
-    for datapoint in datapoints.values():
-        if datapoint["学年"] is None:
-            continue
-        applicants_by_term.setdefault((datapoint["学年"], datapoint["学期"]), set()).add(
-            (datapoint["申请人"][0])
-        )
-
-    applicants_by_term = sorted(
-        [(term, applicants) for term, applicants in applicants_by_term.items()],
-        key=lambda x: _term_converted(*x[0]),
-        reverse=True,
-    )
-
-    for i, term_tuple in enumerate(applicants_by_term):
-        applicants_by_term[i] = (
-            term_tuple[0],
-            sorted(
-                list(term_tuple[1]),
-                key=lambda x: (applicants[x]["ID"]),
-                reverse=False,
-            ),
-        )
-
-    return applicants_by_term
-
-
 def set_term(applicants: dict, datapoints: dict, key: str):
     for applicant in applicants.values():
-        last_year, last_term = None, None
-        latest_term_value = 0
-        for datapoint in applicant.get("数据点", []):
-            datapoint = datapoints[datapoint]
-            term_converted_value = _term_converted(datapoint["学年"], datapoint["学期"])
-            if term_converted_value > latest_term_value:
-                last_year = datapoint["学年"]
-                last_term = datapoint["学期"]
-                latest_term_value = term_converted_value
-
-        applicant[key] = (last_year, last_term)
+        # get max term
+        applicant[key] = max(
+            [(datapoints[dp]["学年"], datapoints[dp]["学期"]) for dp in applicant["数据点"]],
+            key=lambda x: term_value(x[0], x[1]),
+        )
 
 
 def update_nickname(applicants: dict):

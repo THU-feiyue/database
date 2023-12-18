@@ -2,4 +2,3 @@ jinja2
 requests
 mkdocs-material
 mkdocs-awesome-pages-plugin
-mkdocs-redirects

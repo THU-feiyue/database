@@ -1,0 +1,7 @@
+# 本科专业列表
+
+{%- from "macros.jinja" import get_major_link %}
+
+{% for major in majors -%}
+- {{ get_major_link(major) }}&nbsp; {{ major["申请人"] | length }} 个案例
+{% endfor %}

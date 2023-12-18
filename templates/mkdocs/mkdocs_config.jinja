@@ -68,11 +68,13 @@ nav:
     {%- endfor %}
   ]
   - 专业: [
+    "major/index.md",
     {% for major in majors -%}
         "major/{{ major }}.md"{% if loop.index != majors|length %},{% endif %}
     {%- endfor %}
   ]
   - 项目: [
+    "program/index.md",
     {% for program in programs -%}
         "program/{{ program }}.md"{% if loop.index != programs|length %},{% endif %}
     {%- endfor %}
@@ -81,7 +83,3 @@ nav:
 plugins:
   - awesome-pages
   - search
-  - redirects:
-      redirect_maps:
-        major/index.md: major/{{ majors[0] }}.md
-        program/index.md: program/{{ programs[0] }}.md
