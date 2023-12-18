@@ -1,0 +1,13 @@
+name: archive-site 
+on:
+  schedule:
+    - cron: '0 0 * * 1' # every Monday at 00:00 UTC
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - run: npx -y wayback-sitemap-archive https://liang2kl.github.io/feiyue-maker/sitemap.xml
