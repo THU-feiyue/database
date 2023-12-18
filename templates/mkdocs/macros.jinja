@@ -25,3 +25,16 @@
 {%- set reject = result == "Reject" -%}
 {%- if admit %}:green_circle:{% elif reject %}:red_circle:{% else %}:blue_circle:{% endif %} {{ result if result else "Unknown" }}
 {%- endmacro %}
+
+{% macro make_metric_card(title, icon) %}
+<li markdown>
+<div style="font-size:1.1em;" markdown>
+{{ icon }} {{ title }}
+</div>
+<div style="text-align:right;" markdown>
+<big>
+{{ caller() }}
+</big>
+</div>
+</li>
+{% endmacro %}

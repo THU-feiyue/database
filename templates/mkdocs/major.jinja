@@ -1,17 +1,26 @@
-{%- from "macros.jinja" import get_applicant_desc, get_program_link, get_applicant_link -%}
+{%- from "macros.jinja" import get_applicant_desc, get_program_link, get_applicant_link, make_metric_card -%}
 ---
 title: {{ major["专业"] }}（{{ major["院系"] }}）
 ---
 
-# {{ major["专业"] }} <sub>{{ major["院系"] }}</sub>
+<h1 style="line-height:1;">{{ major["专业"] }}<br><small><small>{{ major["院系"] }}</small></small></h1>
 
 <div class="grid cards" markdown>
+<ul markdown>
+{% call make_metric_card("总案例数", ":material-archive-outline:") %}
+**{{ major["申请人"]|length}}**
+{% endcall %}
+{% call make_metric_card("GPA 中位数", ":material-chart-bar:") %}
+**{% if major["__gpa_median"] != None %}{{ major["__gpa_median"] }}{% else %}N/A{% endif %}**
+{% endcall %}
+{% call make_metric_card("最多申请", ":material-star-outline:") %}
+**{% if major["__programs"]|length > 0 %}{{ get_program_link(programs[major["__programs"][0][0]]) }}{% else %}N/A{% endif %}**
+{% endcall %}
+{% call make_metric_card("人均申请", ":material-format-list-numbered:") %}
+**{% if major["__program_count"] > 0%}{{ major["__program_count"] / major["申请人"]|length }} 个项目{% else %}N/A{% endif %}**
+{% endcall %}
 
-- :material-archive: **总案例数** &nbsp;{{ major["申请人"]|length}}
-- :material-chart-bar: **GPA 中位数** &nbsp;{% if major["__gpa_median"] != None %}{{ major["__gpa_median"] }}{% else %}N/A{% endif %}
-- :material-star: **最多申请** &nbsp;{% if major["__programs"]|length > 0 %}{{ get_program_link(programs[major["__programs"][0][0]]) }}{% else %}N/A{% endif %}
-- :material-format-list-numbered: **人均申请** &nbsp;{% if major["__program_count"] > 0%}{{ major["__program_count"] / major["申请人"]|length }} 个项目{% else %}N/A{% endif %}
-
+</ul>
 </div>
 
 ### 申请人数最多的项目

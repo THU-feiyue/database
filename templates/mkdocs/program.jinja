@@ -1,19 +1,32 @@
-{%- from "macros.jinja" import get_applicant_link, get_datapoint_status, get_program_icon, get_major_link -%}
+{%- from "macros.jinja" import get_applicant_link, get_datapoint_status, get_program_icon, get_major_link, make_metric_card -%}
 ---
 title: {{ program["项目"] }}@{{ program["学校"] }}
 ---
 
-# {{ program["项目"] }}@{{ program["学校"] }} `{{ program["类别"] }}`
+# {{ program["项目"] }}@{{ program["学校"] }} <small><code>{{ program["类别"] }}</code></small>
 
 {%- set admitted_datapoints = program_datapoints | selectattr("结果", "equalto", "Admit") | list %}
 {%- set reject_datapoints = program_datapoints | selectattr("结果", "equalto", "Reject") | list %}
 {%- set finalized_datapoints_num = admitted_datapoints | length + reject_datapoints | length %}
 
 <div class="grid cards" markdown>
+<ul markdown>
+{% call make_metric_card("总案例数", ":material-archive-outline:") %}
+**{{ program_datapoints | length }}**<sub>
+<span style="color:var(--md-default-fg-color--light)">
+ /
+{% if admitted_datapoints | length %}{{ admitted_datapoints | length }}<sub>Ad</sub> {% endif %}
+{% if reject_datapoints | length %}{{ reject_datapoints | length }}<sub>Rej</sub> {% endif %}
+{% if program_datapoints | length - finalized_datapoints_num %}{{ program_datapoints | length - finalized_datapoints_num }}<sub>Pending</sub>{% endif %}
+</span>
+</sub>
+{% endcall %}
 
-- :material-archive: **总案例数** &nbsp;{{ program_datapoints | length }}<sub> = {{ admitted_datapoints | length }}<sub>Ad</sub> + {{ reject_datapoints | length }}<sub>Rej</sub> + {{ program_datapoints | length - finalized_datapoints_num }}<sub>Pending</sub> </sub>
-- :material-checkbox-marked-circle: **录取率** &nbsp;{% if finalized_datapoints_num > 0 %}{{ 100 * admitted_datapoints | length // finalized_datapoints_num }}%{% else %}N/A{% endif %}
+{% call make_metric_card("录取率", ":material-checkbox-marked-circle-outline:") %}
+**{% if finalized_datapoints_num > 0 %}{{ 100 * admitted_datapoints | length // finalized_datapoints_num }}%{% else %}N/A{% endif %}**
+{% endcall %}
 
+</ul>
 </div>
 
 ### 申请案例
