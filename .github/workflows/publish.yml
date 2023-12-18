@@ -24,9 +24,8 @@ jobs:
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v3
         with:
-          title: database-backup
-            - name: dtable
-              path: [feiyue.dtable]
-            - name: JSON
-              path: [".cache/*.json"]
+          name: database-backup
+          path: |
+            feiyue.dtable
+            .cache/*.json
           retention-days: 365
