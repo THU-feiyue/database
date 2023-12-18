@@ -15,11 +15,12 @@ title: {{ program["项目"] }}@{{ program["学校"] }}
 
 ### 申请案例
 {% for (year, term), term_applicants in program["__applicants_by_term"]%}
-
+{%- if term_applicants|length > 0%}
 **{{ year }} {{ term }}**
 
 {% for applicant in term_applicants -%}
 {%- set datapoint = program_datapoints | selectattr("申请人", "equalto", applicant) | first -%}
 - {{ get_applicant_link(applicants[applicant], majors[applicants[applicant]["专业"][0]]["院系"], false) }} &nbsp;{{ get_datapoint_status(datapoint["结果"]) }}
 {% endfor %}
+{% endif %}
 {% endfor %}

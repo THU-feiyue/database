@@ -93,7 +93,7 @@ title: {{ get_applicant_desc(applicant, majors[applicant["专业"][0]]["院系"]
 {% endfor %}
 {%- endif %}
 
-{% if "申请总结" in applicant -%}
+{% if "申请总结" in applicant and applicant["申请总结"]|trim -%}
 ## 申请总结
 
 {{ applicant["申请总结"] }}

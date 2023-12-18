@@ -20,10 +20,11 @@ title: {{ major["院系/专业"] }}
 
 ### 申请案例
 {% for (year, term), term_applicants in major["__applicants_by_term"] %}
-
+{%- if term_applicants|length > 0%}
 **{{ year }} {{ term }}**
 
 {% for applicant in term_applicants -%}
 - {{ get_applicant_link(applicants[applicant], "", false) }}
 {% endfor %}
+{% endif %}
 {% endfor %}
