@@ -4,7 +4,7 @@
 
 数据库中的信息储存于 [SeaTable](https://cloud.seatable.io/dtable/external-links/custom/thu-feiyue/) 中，通过 API 读取并生成网页——这使得对数据进行分类、分析成为可能。网页使用 [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) 生成。我们之后还将支持将数据导出为 LaTex 文档，以 PDF 格式发布。
 
-本文档每 6 小时自动更新一次，并每周使用 Internet Archive 的 Wayback Machine 对文档进行快照。具体细节详见 [Actions 页面](https://github.com/liang2kl/feiyue-database/actions/workflows/publish.yml)。
+本文档每 6 小时自动更新一次，并每周使用 Internet Archive 的 Wayback Machine 对文档进行快照。具体细节详见 [Actions 页面](https://github.com/liang2kl/feiyue-database/actions/)。
 
 ## 构建文档
 
