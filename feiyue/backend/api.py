@@ -43,10 +43,20 @@ def init_base_token(api_key: str):
 
 
 def get_all_rows(table_name: str):
-    response = seatable_request("GET", "/rows", {"table_name": table_name})
-
     ret = {}
-    for row in response["rows"]:
-        ret[row["_id"]] = row
+    query_start = 0
+    BATCH_SIZE = 100
+    while True:
+        response = seatable_request(
+            "GET",
+            "/rows",
+            {"table_name": table_name, "start": query_start, "limit": BATCH_SIZE},
+        )
+
+        for row in response["rows"]:
+            ret[row["_id"]] = row
+        if len(response["rows"]) < BATCH_SIZE:
+            break
+        query_start += BATCH_SIZE
 
     return ret
