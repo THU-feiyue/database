@@ -8,16 +8,16 @@ title: {{ major["专业"] }}（{{ major["院系"] }}）
 <div class="grid cards" markdown>
 <ul markdown>
 {% call make_metric_card("总案例数", ":material-archive-outline:") %}
-**{{ major["申请人"]|length}}**
+{{ major["申请人"]|length}}
 {% endcall %}
 {% call make_metric_card("GPA 中位数", ":material-chart-bar:") %}
-**{% if major["__gpa_median"] != None %}{{ major["__gpa_median"] }}{% else %}N/A{% endif %}**
+{% if major["__gpa_median"] != None %}{{ major["__gpa_median"] }}{% else %}N/A{% endif %}
 {% endcall %}
 {% call make_metric_card("最多申请", ":material-star-outline:") %}
-**{% if major["__programs"]|length > 0 %}{{ get_program_desc(programs[major["__programs"][0][0]], show_icon=false) }}{% else %}N/A{% endif %}**
+{% if major["__programs"]|length > 0 %}{{ get_program_desc(programs[major["__programs"][0][0]], show_icon=false) }}{% else %}N/A{% endif %}
 {% endcall %}
 {% call make_metric_card("人均申请", ":material-format-list-numbered:") %}
-**{% if major["__program_count"] > 0%}{{ major["__program_count"] / major["申请人"]|length }} 个项目{% else %}N/A{% endif %}**
+{% if major["__program_count"] > 0%}{{ major["__program_count"] / major["申请人"]|length }} 个项目{% else %}N/A{% endif %}
 {% endcall %}
 
 </ul>
@@ -40,7 +40,7 @@ title: {{ major["专业"] }}（{{ major["院系"] }}）
 | --- | --- | --- | --- |
 {% for applicant in term_applicants -%}
 {%- set applicant = applicants[applicant] -%}
-| {{ get_applicant_link(applicant) }} | {{ applicant["GPA"] }} | {{ applicant["排名"] }} | {% if "__destination" in applicant %}{{ get_program_link(programs[applicant["__destination"]]) }}{% endif %} |
+| {{ get_applicant_link(applicant, show_term=false) }} | {{ applicant["GPA"] }} | {{ applicant["排名"] }} | {% if "__destination" in applicant %}{{ get_program_link(programs[applicant["__destination"]]) }}{% endif %} |
 {% endfor %}
 {% endif %}
 {% endfor %}

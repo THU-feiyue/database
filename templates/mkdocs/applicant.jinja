@@ -41,12 +41,12 @@ title: {{ get_applicant_desc(applicant, majors[applicant["专业"][0]]["院系"]
 {%- endif %}
 
 {% if "TOEFL/IELTS 总分" in applicant -%}
-<li><b>TOEFL/IELTS</b>：{{ applicant["TOEFL/IELTS 总分"] }}{% if "TOEFL/IELTS 阅读" in applicant %} (R{{ applicant["TOEFL/IELTS 阅读"] }}, L{{ applicant["TOEFL/IELTS 听力"] }}, S{{ applicant["TOEFL/IELTS 口语"] }}, W{{ applicant["TOEFL/IELTS 写作"] }}){%- endif %}
+<li><b>TOEFL/IELTS</b>：{{ applicant["TOEFL/IELTS 总分"] }}{% if "TOEFL/IELTS 口语" in applicant %} (R{{ applicant["TOEFL/IELTS 阅读"] }}, L{{ applicant["TOEFL/IELTS 听力"] }}, S{{ applicant["TOEFL/IELTS 口语"] }}, W{{ applicant["TOEFL/IELTS 写作"] }}){%- endif %}
 </li>
 {%- endif %}
 
-{% if "GRE 总分" in applicant -%}
-<li><b>GRE</b>：{{ applicant["GRE 总分"] }}{% if "GRE Quantitative" in applicant %} (V{{ applicant["GRE Verbal"] }}, Q{{ applicant["GRE Quantitative"] }}, W{{ applicant["GRE Writing"] }}){%- endif %}
+{% if "GRE 总分 (V+Q)" in applicant -%}
+<li><b>GRE</b>：{{ applicant["GRE 总分 (V+Q)"] }}{% if "GRE Quantitative" in applicant %} (V{{ applicant["GRE Verbal"] }}, Q{{ applicant["GRE Quantitative"] }}, W{{ applicant["GRE Writing"] }}){%- endif %}
 </li>
 {%- endif %}
 
@@ -85,11 +85,11 @@ title: {{ get_applicant_desc(applicant, majors[applicant["专业"][0]]["院系"]
 {% if "数据点" in applicant -%}
 ## 申请项目
 
-| 项目 | 学期 | 结果 | 时间线 |
-| --- | --- | --- | --- |
+| 项目 | 学期 | 结果 |
+| --- | --- | --- |
 {% for datapoint in applicant["数据点"] -%}
 {%- set datapoint = datapoints[datapoint] -%}
-| {{ get_program_link(programs[datapoint["项目"][0]]) }} | {{ datapoint["学年"] }} {{ datapoint["学期"] }} | {{ get_datapoint_status(datapoint["结果"]) }} | {{ datapoint["时间线"] }} |
+| {{ get_program_link(programs[datapoint["项目"][0]]) }} | {{ datapoint["学年"] }} {{ datapoint["学期"] }} | {{ get_datapoint_status(datapoint) }} |
 {% endfor %}
 {%- endif %}
 

@@ -12,7 +12,7 @@ file_path = Path(os.path.dirname(os.path.realpath(__file__)))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--api-key", type=str, required=True)
+    parser.add_argument("--api-key", type=str, default=None)
     parser.add_argument(
         "--api-base", type=str, default="https://cloud.seatable.io/dtable-server/api/v1"
     )
@@ -55,6 +55,8 @@ if __name__ == "__main__":
                 shutil.rmtree(file_path / ".cache")
 
     if not cache_loaded:
+        if api_key is None:
+            raise Exception("API key is not provided")
         print("Getting all rows...")
         all_applicants, all_datapoints, all_programs, all_majors = backend.get_all_rows(
             api_key
@@ -63,13 +65,13 @@ if __name__ == "__main__":
         # create cache
         cache_dir.mkdir(exist_ok=True)
         with open(cache_dir / "applicants.json", "w") as f:
-            json.dump(all_applicants, f)
+            json.dump(all_applicants, f, ensure_ascii=False)
         with open(cache_dir / "datapoints.json", "w") as f:
-            json.dump(all_datapoints, f)
+            json.dump(all_datapoints, f, ensure_ascii=False)
         with open(cache_dir / "programs.json", "w") as f:
-            json.dump(all_programs, f)
+            json.dump(all_programs, f, ensure_ascii=False)
         with open(cache_dir / "majors.json", "w") as f:
-            json.dump(all_majors, f)
+            json.dump(all_majors, f, ensure_ascii=False)
 
     print(
         "Done, got",
