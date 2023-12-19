@@ -37,3 +37,14 @@ python3 maker.py --api-key=<seatable-api-key> --frontend=mkdocs --link-resources
 cd output
 mkdocs serve
 ```
+
+## 项目结构
+
+```
+.
+├── feiyue     # 项目主要代码
+├── maker.py   # 构建脚本
+├── resources  # 在构建时被直接复制的文件
+├── scripts    # 一些脚本
+└── templates  # 生成网页的模版
+```
