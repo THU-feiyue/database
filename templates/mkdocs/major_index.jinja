@@ -1,7 +1,12 @@
 # 本科专业列表
 
-{%- from "macros.jinja" import get_major_link %}
+{%- from "macros.jinja" import get_major_link, make_horizontal_lined %}
+
+
+<ul markdown>
 
 {% for major in majors -%}
-- {{ get_major_link(major) }}&nbsp; {{ major["申请人"] | length }} 个案例
+<li markdown>{{ make_horizontal_lined(get_major_link(major), major["申请人"] | length | string + " 个案例") }}</li>
 {% endfor %}
+
+</ul>

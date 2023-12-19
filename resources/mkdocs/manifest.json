@@ -2,6 +2,7 @@
   "mappings": {
     "overrides": "overrides",
     "assets": "docs/assets",
-    "docs/faq.md": "docs/faq.md"
+    "docs/faq.md": "docs/faq.md",
+    "stylesheets": "docs/stylesheets"
   }
 }

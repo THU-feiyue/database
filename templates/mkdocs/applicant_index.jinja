@@ -11,12 +11,9 @@
 {%- set applicant = applicants[applicant] -%}
 {%- set major = majors[applicant["专业"][0]] -%}
 | {{ get_applicant_link(applicant, "", false) }} | {{ get_major_link(major, show_dept=false) }} | {{ major["院系"] }} |
-{%- for dp in applicant["数据点"] -%}
-{%- set datapoint = datapoints[dp] -%}
-{%- if datapoint["最终去向"] -%}
-{{ get_program_link(programs[datapoints[dp]["项目"][0]], show_icon=true) }}
+{%- if "__destination" in applicant -%}
+{{ get_program_link(programs[applicant["__destination"]], show_icon=true) }}
 {%- endif -%}
-{%- endfor -%}
 |
 {% endfor %}
 {%- endfor %}

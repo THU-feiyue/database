@@ -94,7 +94,25 @@ title: {{ get_applicant_desc(applicant, majors[applicant["专业"][0]]["院系"]
 {%- endif %}
 
 {% if "申请总结" in applicant and applicant["申请总结"]|trim -%}
+<style>
+.summary-inner {
+    padding: 1.5em 1.5em 1.5em 1.5em;
+    border: 1px solid var(--md-typeset-table-color);
+}
+.summary-inner > :first-child {
+    margin-top: 0;
+    padding-top: 0;
+}
+.summary-inner > :last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+</style>
+
 ## 申请总结
+<div class="summary-inner" markdown>
 
 {{ applicant["申请总结"] }}
+
+</div>
 {%- endif %}

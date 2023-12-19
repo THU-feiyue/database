@@ -23,7 +23,7 @@ class MkDocsFrontend(Frontend):
         self.program_index_template = env.get_template("program_index.jinja")
 
     def build(self, all_applicants, all_datapoints, all_programs, all_majors):
-        self._set_applicants_by_term(all_datapoints, all_applicants)
+        self._preprocess(all_applicants, all_datapoints, all_programs, all_majors)
 
         output_dir = Path(self.output_dir)
         output_dir.mkdir(exist_ok=True)
@@ -57,27 +57,10 @@ class MkDocsFrontend(Frontend):
         )
         print("done")
 
-    def _build_applicant_pages(
-        self, all_applicants, all_datapoints, all_programs, all_majors
-    ):
-        for applicant in all_applicants.values():
-            applicant_md = self.applicant_template.render(
-                metadata={},
-                applicant=applicant,
-                majors=all_majors,
-                programs=all_programs,
-                datapoints=all_datapoints,
-            )
-
-            output_path = self.mkdocs_docs_dir / "applicant" / f"{applicant['ID']}.md"
-            output_path.parent.mkdir(exist_ok=True)
-            with open(output_path, "w") as f:
-                f.write(applicant_md)
-
-    def _build_major_pages(
-        self, all_applicants, all_datapoints, all_programs, all_majors
-    ):
+    def _preprocess(self, all_applicants, all_datapoints, all_programs, all_majors):
+        self._set_applicants_by_term(all_datapoints, all_applicants)
         # get top programs & terms & GPA median & total programs for each major
+        # get final destination for each applicant
         for major in all_majors.values():
             major["__applicants_by_term"] = [
                 (
@@ -103,6 +86,9 @@ class MkDocsFrontend(Frontend):
                     major["__programs"][datapoint["项目"][0]] += 1
                     major["__program_count"] += 1
 
+                    if "最终去向" in datapoint:
+                        applicant["__destination"] = datapoint["项目"][0]
+
                 if "GPA" in applicant:
                     gpas.append(applicant["GPA"])
 
@@ -113,23 +99,6 @@ class MkDocsFrontend(Frontend):
                 round(statistics.median(gpas), 2) if len(gpas) > 0 else None
             )
 
-        for major in all_majors.values():
-            major_md = self.major_template.render(
-                metadata={},
-                major=major,
-                applicants=all_applicants,
-                programs=all_programs,
-                datapoints=all_datapoints,
-            )
-
-            output_path = self.mkdocs_docs_dir / "major" / f"{major['ID']}.md"
-            output_path.parent.mkdir(exist_ok=True)
-            with open(output_path, "w") as f:
-                f.write(major_md)
-
-    def _build_program_pages(
-        self, all_applicants, all_datapoints, all_programs, all_majors
-    ):
         # get terms for each program
         for program in all_programs.values():
             program["__applicants_by_term"] = [
@@ -147,6 +116,43 @@ class MkDocsFrontend(Frontend):
                 for term, applicants in self.applicants_by_term
             ]
 
+    def _build_applicant_pages(
+        self, all_applicants, all_datapoints, all_programs, all_majors
+    ):
+        for applicant in all_applicants.values():
+            applicant_md = self.applicant_template.render(
+                metadata={},
+                applicant=applicant,
+                majors=all_majors,
+                programs=all_programs,
+                datapoints=all_datapoints,
+            )
+
+            output_path = self.mkdocs_docs_dir / "applicant" / f"{applicant['ID']}.md"
+            output_path.parent.mkdir(exist_ok=True)
+            with open(output_path, "w") as f:
+                f.write(applicant_md)
+
+    def _build_major_pages(
+        self, all_applicants, all_datapoints, all_programs, all_majors
+    ):
+        for major in all_majors.values():
+            major_md = self.major_template.render(
+                metadata={},
+                major=major,
+                applicants=all_applicants,
+                programs=all_programs,
+                datapoints=all_datapoints,
+            )
+
+            output_path = self.mkdocs_docs_dir / "major" / f"{major['ID']}.md"
+            output_path.parent.mkdir(exist_ok=True)
+            with open(output_path, "w") as f:
+                f.write(major_md)
+
+    def _build_program_pages(
+        self, all_applicants, all_datapoints, all_programs, all_majors
+    ):
         for program in all_programs.values():
             # do this work outside of jinja2 -- it's too complicated
             program_datapoints = all_datapoints.copy()

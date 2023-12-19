@@ -1,28 +1,13 @@
 # 项目列表
 
-<style>
-.f-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-}
-.f-container hr {
-    flex-grow: 1;
-    margin: 0 0 0 0;
-}
-@media (max-width: 400px) {
-    .f-container hr {
-        display: none;
-    }
-}
-</style>
-
-{%- from "macros.jinja" import get_program_link %}
+{%- from "macros.jinja" import get_program_link, make_horizontal_lined %}
 
 {% for school, school_programs in programs | groupby("学校") %}
 #### {{ school }}
+
+<ul markdown>
 {% for program in school_programs -%}
-- <span class="f-container" markdown><span markdown>{{ get_program_link(program, show_icon=true) }}</span><hr></hr><span>{{ program["数据点"] | length }} 个数据点</span></span>
+<li markdown>{{ make_horizontal_lined(get_program_link(program, show_icon=true), program["数据点"] | length | string + " 个数据点") }}</li>
 {% endfor %}
+</ul>
 {% endfor %}
