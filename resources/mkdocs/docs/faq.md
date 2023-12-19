@@ -22,31 +22,31 @@ title: 常见问题
 
     **1. 在“项目”栏对应的格子中点击 + 号**
     !!! note ""
-        ![](../assets/add-record.png)
+        ![](assets/add-record.png)
 
     **2. 点击左上角返回按钮**
 
     !!! note ""
-        ![](../assets/add-record-1.png)
+        ![](assets/add-record-1.png)
 
     **3. 点击右上角添加记录**
 
     !!! note ""
-        ![](../assets/add-record-2.png)
+        ![](assets/add-record-2.png)
 
     **4. 输入项目信息并点击右下角提交**
     
     请注意，不需要在这个界面中添加数据点。
 
     !!! note ""
-        ![](../assets/add-record-3.png)
+        ![](assets/add-record-3.png)
 
 #### 如何删除已提交的个人资料/数据点？
 
 在一行的最左侧处右键，选择“删除行”即可。
 
 ??? note "查看图片"
-    ![](../assets/delete-record.png)
+    ![](assets/delete-record.png)
 
 ## 文档更新
 
@@ -56,11 +56,11 @@ title: 常见问题
 
 #### 文档更新后还是看不到提交/更新的申请案例/数据点
 
-为避免无效案例出现在文档中，我们会对案例进行筛选。只要您的个人资料中包括至少一个有效（即信息完整的）数据点，您的申请案例就会被更新到文档中。具体逻辑请参考 [相关代码](https://github.com/liang2kl/feiyue-maker/blob/main/feiyue/backend/__init__.py)。
+为避免无效案例出现在文档中，我们会对案例进行筛选。只要您的个人资料中包括至少一个有效（即信息完整的）数据点，您的申请案例就会被更新到文档中。具体逻辑请参考[相关代码](https://github.com/liang2kl/feiyue-database/blob/main/feiyue/backend/__init__.py)。
 
 #### 文档有 PDF 版本吗？
 
-目前还没有。我们计划在每年申请季开始为将前一年的案例生成 PDF，并发布在 [Release 页面](https://github.com/liang2kl/feiyue-maker/releases) 上。
+目前还没有。我们计划在每年申请季开始将前一年的案例制作为 PDF，并发布在 [Release 页面](https://github.com/liang2kl/feiyue-database/releases)上。
 
 ## 数据公开与安全
 
@@ -70,7 +70,7 @@ title: 常见问题
 
 #### 如何保证数据安全？
 
-每次使用 GitHub Actions 更新文档时，我们会对完整数据库进行备份，存于 Actions 的 Artifacts 中，您可以在 [Actions 页面](https://github.com/liang2kl/feiyue-maker/actions/workflows/publish.yml) 中查看。另外，我们也会定期使用 Internet Archive 的 [Wayback Machine](https://web.archive.org/) 对文档进行快照，您可以在 [这里](https://web.archive.org/web/*/https://liang2kl.github.io/feiyue-maker/) 查看。
+每次使用 GitHub Actions 更新文档时，我们会对完整数据库进行备份，存于 Actions 的 Artifacts 中，您可以在 [Actions 页面](https://github.com/liang2kl/feiyue-database/actions/workflows/publish.yml)中查看。另外，我们也会定期使用 Internet Archive 的 Wayback Machine 对文档进行快照，您可以在[这里](https://web.archive.org/web/*/https://liang2kl.github.io/feiyue-database/)查看。
 
 #### 如何防止恶意行为？
 

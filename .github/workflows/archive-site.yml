@@ -12,4 +12,4 @@ jobs:
         with:
           node-version: '14'
       - run: npm install -g wayback-sitemap-archive
-      - run: wayback-sitemap-archive https://liang2kl.github.io/feiyue-maker/sitemap.xml
+      - run: wayback-sitemap-archive https://liang2kl.github.io/feiyue-database/sitemap.xml
