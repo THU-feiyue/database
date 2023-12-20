@@ -2,13 +2,16 @@
 
 {%- from "macros.jinja" import get_applicant_link, get_major_link, get_program_link -%}
 
-{% for (year, term), term_applicants in applicants_by_term %}
+{% for (year, term), term_applicant_ids in applicants_by_term %}
 #### {{ year }} {{ term }}
+{% set term_applicants = [] -%}
+{% for applicant in term_applicant_ids -%}
+{{- term_applicants.append(applicants[applicant]) or "" }}
+{%- endfor %}
 
 | 申请人 | 专业 | 院系 | 去向 |
 | --- | --- | --- | --- |
-{% for applicant in term_applicants -%}
-{%- set applicant = applicants[applicant] -%}
+{% for applicant in term_applicants | sort(attribute="专业") -%}
 {%- set major = majors[applicant["专业"][0]] -%}
 | {{ get_applicant_link(applicant, "", false) }} | {{ get_major_link(major, show_dept=false) }} | {{ major["院系"] }} |
 {%- if "__destination" in applicant -%}

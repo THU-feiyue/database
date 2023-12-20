@@ -1,3 +1,4 @@
+{%- from "macros.jinja" import get_program_icon -%}
 site_name: 清华大学飞跃数据库
 site_url: https://feiyue.online/database/
 repo_url: https://github.com/THU-feiyue/database/
@@ -12,6 +13,7 @@ theme:
   features:
     - navigation.tabs
     - navigation.indexes
+    - navigation.top
     - announce.dismiss
   custom_dir: overrides
 
@@ -48,9 +50,15 @@ markdown_extensions:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - md_in_html
+  - mdx_truly_sane_lists
 
 extra_css:
   - stylesheets/extra.css
+
+extra:
+  analytics:
+    provider: google
+    property: G-E16X93G09M
 
 nav:
   - 主页:
@@ -64,11 +72,10 @@ nav:
             [
                 {% for applicant in term_applicants -%}
                     "applicant/{{ all_applicants[applicant]["ID"] }}.md"{% if loop.index != term_applicants|length %},{% endif %}
-                {%- endfor %}
+                {% endfor %}
             ]
-    }
-    {% if loop.index != applicants_by_term|length %},{% endif %}
-    {%- endfor %}
+    }{% if loop.index != applicants_by_term|length %},{% endif %}
+    {% endfor %}
   ]
   - 专业: [
     "major/index.md",
@@ -83,12 +90,11 @@ nav:
         "{{ school }}":
             [
                 {% for program in school_programs -%}
-                    "program/{{ program["ID"] }}.md"{% if loop.index != school_programs|length %},{% endif %}
-                {%- endfor %}
+                    "{{ program["项目"] }} {{ get_program_icon(program) }}": "program/{{ program["ID"] }}.md"{% if loop.index != school_programs|length %},{% endif %}
+                {% endfor %}
             ]
-    }
-    {% if loop.index != programs|length %},{% endif %}
-    {%- endfor %}
+    }{% if loop.index != programs|length %},{% endif %}
+    {% endfor %}
   ]
 
 plugins:

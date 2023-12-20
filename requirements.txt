@@ -2,3 +2,4 @@ jinja2
 requests
 mkdocs-material
 mkdocs-awesome-pages-plugin
+mdx_truly_sane_lists

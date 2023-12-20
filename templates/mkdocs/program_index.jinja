@@ -3,7 +3,7 @@
 {%- from "macros.jinja" import get_program_link, make_horizontal_lined %}
 
 {% for school, school_programs in programs | groupby("学校") %}
-#### {{ school }}
+**{{ school }}**
 
 <ul markdown>
 {% for program in school_programs -%}

@@ -1,8 +1,6 @@
 /* full-width table */
 .md-typeset__table,
-.md-typeset__table>table,
-.md-typeset__table>table>tbody,
-.md-typeset__table>table>thead {
+.md-typeset__table>table {
     min-width: 100% !important;
 }
 
@@ -15,7 +13,11 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 20px;
+    gap: 1.5em;
+}
+
+.lined-flex>span:last-child {
+    flex-shrink: 0;
 }
 
 .lined-flex hr {
@@ -26,5 +28,9 @@
 @media (max-width: 400px) {
     .lined-flex hr {
         display: none;
+    }
+
+    .lined-flex {
+        display: block;
     }
 }

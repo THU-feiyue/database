@@ -7,7 +7,7 @@
 {%- endmacro %}
 
 {% macro get_program_icon(program) -%}
-<sup><code>{{ program["类别"] }}</code></sup>
+<small><code>{{ program["类别"] }}</code></small>
 {%- endmacro %}
 
 {% macro get_program_desc(program, show_icon=true) -%}
@@ -30,11 +30,11 @@
 {%- set result = datapoint["结果"] -%}
 {%- set admit = result == "Admit" -%}
 {%- set reject = result == "Reject" -%}
-{%- if datapoint["最终去向"] %}:white_check_mark: 最终去向{% else %}{%- if admit %}:green_circle:{% elif reject %}:red_circle:{% else %}:blue_circle:{% endif %} {{ result if result else "Unknown" }}{% endif %}
+{%- if datapoint["最终去向"] %}:white_check_mark: Chosen{% else %}{%- if admit %}:green_circle:{% elif reject %}:red_circle:{% else %}:blue_circle:{% endif %} {{ result if result else "Unknown" }}{% endif %}
 {%- endmacro %}
 
 {% macro make_metric_card(title, icon) %}
-<li markdown>
+<li style="user-select:none;-webkit-user-select:none;cursor:default;" markdown>
 <div style="font-size:1.05em;" markdown>
 {{ icon }} {{ title }}
 </div>

@@ -67,6 +67,12 @@ title: {{ get_applicant_desc(applicant, majors[applicant["专业"][0]]["院系"]
 {{ applicant["科研/实习经历"] }}
 {%- endif %}
 
+{% if "其他经历" in applicant -%}
+**其他经历**
+
+{{ applicant["其他经历"] }}
+{%- endif %}
+
 {% if "推荐信#1" in applicant or "推荐信#2" in applicant or "推荐信#3" in applicant -%}
 **推荐信**
 
@@ -96,7 +102,7 @@ title: {{ get_applicant_desc(applicant, majors[applicant["专业"][0]]["院系"]
 {% if "申请总结" in applicant and applicant["申请总结"]|trim -%}
 <style>
 .summary-inner {
-    padding: 1.5em 1.5em 1.5em 1.5em;
+    padding: 1.25em 1.25em 1.25em 1.25em;
     border: 1px solid var(--md-typeset-table-color);
 }
 .summary-inner > :first-child {
