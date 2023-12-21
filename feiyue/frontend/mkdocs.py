@@ -195,7 +195,7 @@ class MkDocsFrontend(Frontend):
         mkdocs_config = self.mkdocs_template.render(
             all_applicants=all_applicants,
             applicants_by_term=self.applicants_by_term,
-            majors=[x["ID"] for x in sorted_majors],
+            majors=sorted_majors,
             programs=sorted_programs,
             build_time=datetime.now(tz=timezone(timedelta(hours=+8))).strftime(
                 "%Y年%m月%d日 %H:%M"

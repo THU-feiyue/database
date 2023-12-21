@@ -6,8 +6,8 @@
 **{{ school }}**
 
 <ul markdown>
-{% for program in school_programs -%}
-<li markdown>{{ make_horizontal_lined(get_program_link(program, show_icon=true), program["数据点"] | length | string + " 个数据点") }}</li>
+{% for program in school_programs | sort(attribute="类别") -%}
+<li markdown>{{ make_horizontal_lined(get_program_link(program, show_icon=true, show_school=false), program["数据点"] | length | string + " 个数据点") }}</li>
 {% endfor %}
 </ul>
 {% endfor %}

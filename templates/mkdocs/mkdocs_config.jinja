@@ -13,7 +13,6 @@ theme:
   features:
     - navigation.tabs
     - navigation.indexes
-    - navigation.top
     - announce.dismiss
   custom_dir: overrides
 
@@ -80,7 +79,7 @@ nav:
   - 专业: [
     "major/index.md",
     {% for major in majors -%}
-        "major/{{ major }}.md"{% if loop.index != majors|length %},{% endif %}
+        "major/{{ major["ID"] }}.md"{% if loop.index != majors|length %},{% endif %}
     {%- endfor %}
   ]
   - 项目: [
@@ -89,8 +88,8 @@ nav:
     {
         "{{ school }}":
             [
-                {% for program in school_programs -%}
-                    "{{ program["项目"] }} {{ get_program_icon(program) }}": "program/{{ program["ID"] }}.md"{% if loop.index != school_programs|length %},{% endif %}
+                {% for program in school_programs | sort(attribute="类别") -%}
+                    "{{ program["项目"] }} <small>{{ get_program_icon(program) }}</small>": "program/{{ program["ID"] }}.md"{% if loop.index != school_programs|length %},{% endif %}
                 {% endfor %}
             ]
     }{% if loop.index != programs|length %},{% endif %}

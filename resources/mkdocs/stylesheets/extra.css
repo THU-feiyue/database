@@ -22,6 +22,7 @@
 
 .lined-flex hr {
     flex-grow: 1;
+    min-width: 2em;
     margin: 0 0 0 0;
 }
 

@@ -10,16 +10,16 @@
 <small><code>{{ program["类别"] }}</code></small>
 {%- endmacro %}
 
-{% macro get_program_desc(program, show_icon=true) -%}
-{{ program["学校@项目"] }}{% if show_icon %} {{ get_program_icon(program) }}{% endif %}
+{% macro get_program_desc(program, show_icon=true, show_school=true) -%}
+{{ program["项目"] }}{% if show_school %}@{{ program["学校"] }}{% endif %}{% if show_icon %} {{ get_program_icon(program) }}{% endif %}
 {%- endmacro %}
 
-{% macro get_major_link(major, show_dept=true) -%}
+{% macro get_major_link(major, show_dept=true, show_school=true) -%}
 [{{ get_major_desc(major, show_dept) }}](../major/{{ major["ID"] }}.md)
 {%- endmacro %}
 
-{% macro get_program_link(program, show_icon=true) -%}
-[{{ get_program_desc(program, show_icon) }}](../program/{{ program["ID"] }}.md)
+{% macro get_program_link(program, show_icon=true, show_school=true) -%}
+[{{ get_program_desc(program, show_icon, show_school) }}](../program/{{ program["ID"] }}.md)
 {%- endmacro %}
 
 {% macro get_applicant_link(applicant, major, show_term=true) -%}
@@ -30,7 +30,8 @@
 {%- set result = datapoint["结果"] -%}
 {%- set admit = result == "Admit" -%}
 {%- set reject = result == "Reject" -%}
-{%- if datapoint["最终去向"] %}:white_check_mark: Chosen{% else %}{%- if admit %}:green_circle:{% elif reject %}:red_circle:{% else %}:blue_circle:{% endif %} {{ result if result else "Unknown" }}{% endif %}
+{%- set withdraw = result == "Withdraw" -%}
+{%- if datapoint["最终去向"] %}:white_check_mark: Chosen{% else %}{%- if admit %}:green_circle:{% elif reject %}:red_circle:{% elif withdraw %}:orange_circle:{% else %}:blue_circle:{% endif %} {{ result if result else "Unknown" }}{% endif %}
 {%- endmacro %}
 
 {% macro make_metric_card(title, icon) %}
