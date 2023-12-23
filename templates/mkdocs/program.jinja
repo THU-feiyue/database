@@ -3,13 +3,13 @@
 title: {{ program["项目"] }}@{{ program["学校"] }}
 ---
 
-# {{ program["项目"] }}@{{ program["学校"] }} <small><code>{{ program["类别"] }}</code></small>
+<h1 style="line-height:1;">{{ program["项目"] }} <small><code>{{ program["类别"] }}</code></small><br><small>{{ program["学校"] }}</small></h1>
 
 {%- set admitted_datapoints = program_datapoints | selectattr("结果", "equalto", "Admit") | list %}
 {%- set reject_datapoints = program_datapoints | selectattr("结果", "equalto", "Reject") | list %}
 {%- set finalized_datapoints_num = admitted_datapoints | length + reject_datapoints | length %}
 
-<div class="grid cards" markdown>
+<div class="grid cards cards-metric" markdown>
 <ul markdown>
 {% call make_metric_card("总案例数", ":material-archive-outline:") %}
 {{ program_datapoints | length }}<sub>

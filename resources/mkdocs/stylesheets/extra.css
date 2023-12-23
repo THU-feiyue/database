@@ -35,3 +35,9 @@
         display: block;
     }
 }
+
+/* card */
+.md-typeset .grid.cards-metric>ul>li:hover {
+    box-shadow: none !important;
+    border: .05rem solid var(--md-default-fg-color--lightest);
+}

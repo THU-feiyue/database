@@ -5,7 +5,7 @@ title: {{ major["专业"] }}（{{ major["院系"] }}）
 
 <h1 style="line-height:1;">{{ major["专业"] }}<br><small><small>{{ major["院系"] }}</small></small></h1>
 
-<div class="grid cards" markdown>
+<div class="grid cards cards-metric" markdown>
 <ul markdown>
 {% call make_metric_card("总案例数", ":material-archive-outline:") %}
 {{ major["申请人"]|length}}
