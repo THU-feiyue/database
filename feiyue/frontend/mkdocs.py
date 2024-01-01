@@ -12,7 +12,7 @@ class MkDocsFrontend(Frontend):
         self.mkdocs_docs_dir = output_dir / "docs"
 
     def pre_build(self):
-        env = Environment(loader=FileSystemLoader(self.template_dir))
+        env = Environment(loader=FileSystemLoader(self.template_dir), autoescape=True)
         self.applicant_template = env.get_template("applicant.jinja")
         self.major_template = env.get_template("major.jinja")
         self.program_template = env.get_template("program.jinja")

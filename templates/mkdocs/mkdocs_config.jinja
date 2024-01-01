@@ -79,7 +79,7 @@ nav:
   - 专业: [
     "major/index.md",
     {% for major in majors -%}
-        "major/{{ major["ID"] }}.md"{% if loop.index != majors|length %},{% endif %}
+        "{{ major["专业"] }} <small>/ {{ major["院系"] }}</small>": "major/{{ major["ID"] }}.md"{% if loop.index != majors|length %},{% endif %}
     {%- endfor %}
   ]
   - 项目: [

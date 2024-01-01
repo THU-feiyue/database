@@ -37,6 +37,14 @@
 }
 
 /* card */
+.card-container {
+    display: flex;
+    gap: 0.5em;
+    justify-content: space-between;
+    height: 100%;
+    flex-direction: column;
+}
+
 .md-typeset .grid.cards-metric>ul>li:hover {
     box-shadow: none !important;
     border: .05rem solid var(--md-default-fg-color--lightest);

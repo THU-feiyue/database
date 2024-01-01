@@ -36,6 +36,7 @@
 
 {% macro make_metric_card(title, icon) %}
 <li markdown>
+<div class="card-container" markdown>
 <div style="font-size:1.05em;user-select:none;-webkit-user-select:none;cursor:default;" markdown>
 {{ icon }} {{ title }}
 </div>
@@ -43,6 +44,7 @@
 <big>
 {{ caller() }}
 </big>
+</div>
 </div>
 </li>
 {% endmacro %}
