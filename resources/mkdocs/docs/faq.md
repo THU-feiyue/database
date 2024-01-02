@@ -70,7 +70,7 @@ title: 常见问题
 
 #### 如何保证数据安全？
 
-每次使用 GitHub Actions 更新文档时，我们会对完整数据库进行备份，存于 Actions 的 Artifacts 中，您可以在 [Actions 页面](https://github.com/THU-feiyue/database/actions/workflows/publish.yml)中查看。另外，我们也会定期使用 Internet Archive 的 Wayback Machine 对文档进行快照，您可以在[这里](https://web.archive.org/web/*/https://feiyue.online/database/)查看。
+每次使用 GitHub Actions 更新文档时，我们会对完整数据库进行备份，存于 Actions 的 Artifacts 中，您可以在 [Actions 页面](https://github.com/THU-feiyue/database/actions/workflows/publish.yml)中查看。另外，我们也会定期使用 Internet Archive 的 Wayback Machine 对文档进行快照，您可以在[这里](https://web.archive.org/web/*/https://database.feiyue.online/)查看。
 
 #### 如何防止恶意行为？
 
