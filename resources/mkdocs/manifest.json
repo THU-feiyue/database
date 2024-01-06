@@ -3,6 +3,7 @@
     "overrides": "overrides",
     "assets": "docs/assets",
     "docs/faq.md": "docs/faq.md",
-    "stylesheets": "docs/stylesheets"
+    "stylesheets": "docs/stylesheets",
+    "docs/CNAME": "docs/CNAME"
   }
 }
