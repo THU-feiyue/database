@@ -21,7 +21,7 @@ pip3 install -r requirements.txt
 使用如下命令构建：
 
 ```bash
-python3 maker.py --api-key=<seatable-api-key> --frontend=mkdocs --link-resources [--cached]
+python3 maker.py --api-key=<seatable-api-key> --frontend=mkdocs [--link-resources] [--cached]
 ```
 
 - 使用 `--link-resources` 时，复制静态文档到输出文件夹时将直接创建符号链接，而不是复制文件，这样可以使得 MkDocs 检测到文件的更新，适合在本地开发时打开。
