@@ -198,7 +198,7 @@ class MkDocsFrontend(Frontend):
             majors=sorted_majors,
             programs=sorted_programs,
             build_time=datetime.now(tz=timezone(timedelta(hours=+8))).strftime(
-                "%Y年%m月%d日 %H:%M"
+                "%Y年%-m月%-d日 %H:%M"
             ),
         )
         with open(self.output_dir / "mkdocs.yml", "w") as f:

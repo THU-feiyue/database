@@ -50,6 +50,8 @@ markdown_extensions:
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - md_in_html
   - mdx_truly_sane_lists
+  - pymdownx.tabbed:
+      alternate_style: true
 
 extra_css:
   - stylesheets/extra.css
@@ -62,6 +64,7 @@ extra:
 nav:
   - 主页:
     - index.md
+    - contribute.md
     - faq.md
   - 申请案例: [
     "applicant/index.md",

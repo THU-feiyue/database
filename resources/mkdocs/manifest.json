@@ -1,8 +1,8 @@
 {
   "mappings": {
     "overrides": "overrides",
-    "assets": "docs/assets",
     "docs/faq.md": "docs/faq.md",
+    "docs/contribute.md": "docs/contribute.md",
     "stylesheets": "docs/stylesheets",
     "docs/CNAME": "docs/CNAME"
   }

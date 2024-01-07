@@ -40,7 +40,7 @@ title: {{ major["专业"] }}（{{ major["院系"] }}）
 | --- | --- | --- | --- |
 {% for applicant in term_applicants -%}
 {%- set applicant = applicants[applicant] -%}
-| {{ get_applicant_link(applicant, show_term=false) }} | {{ applicant["GPA"] }} | {{ applicant["排名"] }} | {% if "__destination" in applicant %}{{ get_program_link(programs[applicant["__destination"]]) }}{% endif %} |
+| {{ get_applicant_link(applicant, show_term=false) }} | {{ applicant["GPA"]|default("N/A") }} | {{ applicant["排名"]|default("N/A") }} | {% if "__destination" in applicant %}{{ get_program_link(programs[applicant["__destination"]]) }}{% else %}N/A{% endif %} |
 {% endfor %}
 {% endif %}
 {% endfor %}

@@ -49,3 +49,19 @@
     box-shadow: none !important;
     border: .05rem solid var(--md-default-fg-color--lightest);
 }
+
+/* application summary */
+.summary-inner {
+    padding: 1.25em 1.25em 1.25em 1.25em;
+    border: 1px solid var(--md-typeset-table-color);
+}
+
+.summary-inner> :first-child {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.summary-inner> :last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
