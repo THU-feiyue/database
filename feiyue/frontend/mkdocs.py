@@ -86,7 +86,7 @@ class MkDocsFrontend(Frontend):
                     major["__programs"][datapoint["项目"][0]] += 1
                     major["__program_count"] += 1
 
-                    if "最终去向" in datapoint:
+                    if "最终去向" in datapoint and datapoint["最终去向"]:
                         applicant["__destination"] = datapoint["项目"][0]
 
                 if "GPA" in applicant:
