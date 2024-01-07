@@ -25,7 +25,7 @@ python3 maker.py --api-key=<seatable-api-key> --frontend=mkdocs [--link-resource
 ```
 
 - 使用 `--link-resources` 时，复制静态文档到输出文件夹时将直接创建符号链接，而不是复制文件，这样可以使得 MkDocs 检测到文件的更新，适合在本地开发时打开。
-- 使用 `--cache` 时，将会缓存 SeaTable 数据库的数据，而无需使用 API 查询数据库。
+- 使用 `--cached` 时，将会缓存 SeaTable 数据库的数据，而无需使用 API 查询数据库。
 
 如果没有 API Key，可以到 [`publish` Action](https://github.com/THU-feiyue/database/actions/workflows/publish.yml) 中最新的 run 处下载名为 `database-backup` 的 artifact，解压后将 `.cache` 目录复制到项目根目录下，并使用 `--cached` 参数即可。
 
