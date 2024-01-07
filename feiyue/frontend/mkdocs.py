@@ -21,6 +21,7 @@ class MkDocsFrontend(Frontend):
         self.applicant_index_template = env.get_template("applicant_index.jinja")
         self.major_index_template = env.get_template("major_index.jinja")
         self.program_index_template = env.get_template("program_index.jinja")
+        self.area_index_template = env.get_template("area_index.jinja")
 
     def build(self, all_applicants, all_datapoints, all_programs, all_majors):
         self._preprocess(all_applicants, all_datapoints, all_programs, all_majors)
@@ -59,6 +60,7 @@ class MkDocsFrontend(Frontend):
 
     def _preprocess(self, all_applicants, all_datapoints, all_programs, all_majors):
         self._set_applicants_by_term(all_datapoints, all_applicants)
+        self.all_areas = self._get_areas(all_applicants)
         # get top programs & terms & GPA median & total programs for each major
         # get final destination for each applicant
         for major in all_majors.values():
@@ -194,6 +196,8 @@ class MkDocsFrontend(Frontend):
 
         mkdocs_config = self.mkdocs_template.render(
             all_applicants=all_applicants,
+            all_majors=all_majors,
+            all_programs=all_programs,
             applicants_by_term=self.applicants_by_term,
             majors=sorted_majors,
             programs=sorted_programs,
@@ -208,6 +212,7 @@ class MkDocsFrontend(Frontend):
             applicant_num=len(all_applicants),
             major_num=len(all_majors),
             program_num=len(all_programs),
+            area_num=len(self.all_areas),
         )
         with open(self.mkdocs_docs_dir / "index.md", "w") as f:
             f.write(index_md)
@@ -233,6 +238,17 @@ class MkDocsFrontend(Frontend):
         )
         with open(self.mkdocs_docs_dir / "program" / "index.md", "w") as f:
             f.write(program_index_md)
+
+        # area index page
+        area_index_md = self.area_index_template.render(
+            all_areas=self.all_areas,
+            applicants=all_applicants,
+            majors=all_majors,
+            programs=all_programs,
+            datapoints=all_datapoints,
+        )
+        with open(self.mkdocs_docs_dir / "area.md", "w") as f:
+            f.write(area_index_md)
 
     def _set_applicants_by_term(self, datapoints: dict, applicants: dict) -> dict:
         self.applicants_by_term = {}
@@ -262,3 +278,15 @@ class MkDocsFrontend(Frontend):
                     reverse=False,
                 ),
             )
+
+    def _get_areas(self, all_applicants: dict) -> dict:
+        all_areas: dict[str, list] = {}
+        for term, applicants in self.applicants_by_term:
+            for applicant in applicants:
+                applicant = all_applicants[applicant]
+                areas = applicant["申请方向"]
+                for area in areas:
+                    all_areas.setdefault(area, []).append((term, applicant["_id"]))
+
+        all_areas = dict(sorted(all_areas.items(), key=lambda x: x[0]))
+        return all_areas

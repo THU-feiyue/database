@@ -1,4 +1,4 @@
-{%- from "macros.jinja" import get_program_icon -%}
+{%- from "macros.jinja" import get_program_icon, get_applicant_desc, get_program_desc -%}
 site_name: 清华大学飞跃数据库
 site_url: https://database.feiyue.online/
 repo_url: https://github.com/THU-feiyue/database/
@@ -61,19 +61,26 @@ extra:
     provider: google
     property: G-E16X93G09M
 
+plugins:
+  - awesome-pages
+  - search
+
 nav:
   - 主页:
     - index.md
     - contribute.md
     - faq.md
-  - 申请案例: [
+  - 案例: [
     "applicant/index.md",
     {% for (year, term), term_applicants in applicants_by_term %}
     {
         "{{ year }} {{ term }}":
             [
                 {% for applicant in term_applicants -%}
-                    "applicant/{{ all_applicants[applicant]["ID"] }}.md"{% if loop.index != term_applicants|length %},{% endif %}
+                    {% set applicant = all_applicants[applicant] -%}
+                    "{{ get_applicant_desc(applicant, "", show_term=false) }}<small>（{{ all_majors[applicant["专业"][0]]["院系"]}}）</small>
+                    {%- if "__destination" in applicant %}<br><small><code>{{ get_program_desc(all_programs[applicant["__destination"]], show_icon=false) }}
+                    {%- endif -%}</code></small>": "applicant/{{ applicant["ID"] }}.md"{% if loop.index != term_applicants|length %},{% endif %}
                 {% endfor %}
             ]
     }{% if loop.index != applicants_by_term|length %},{% endif %}
@@ -85,6 +92,7 @@ nav:
         "{{ major["专业"] }} <small>/ {{ major["院系"] }}</small>": "major/{{ major["ID"] }}.md"{% if loop.index != majors|length %},{% endif %}
     {%- endfor %}
   ]
+  - 方向: "area.md"
   - 项目: [
     "program/index.md",
     {% for school, school_programs in programs | groupby("学校") -%}
@@ -98,7 +106,3 @@ nav:
     }{% if loop.index != programs|length %},{% endif %}
     {% endfor %}
   ]
-
-plugins:
-  - awesome-pages
-  - search

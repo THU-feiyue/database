@@ -32,8 +32,8 @@ comments: true
     - 填写的学校名称应与已有的项目保持一致。
     - 对于项目名称：
       - 缩写不应引发歧义，如不确定，请填写全名。
-      - 对于 Master 项目，请加上前缀，如 MSCS、MS Stats、MA Asian Studies。
-      - 对于 PhD 项目，无需加上前缀，如 CS、Stats、Astro。
+      - 对于 Master 项目，请加上前缀，如 MSCS、MS Stat、MA Asian Studies。
+      - 对于 PhD 项目，无需加上前缀，如 CS、Stat、Astro。
     - **不需要**在这个界面中添加数据点。
 
 3. **在「申请人」栏中点击「+」并选择您所创建的申请人。**

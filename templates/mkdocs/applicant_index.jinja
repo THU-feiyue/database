@@ -1,6 +1,6 @@
 # 申请案例
 
-{%- from "macros.jinja" import get_applicant_link, get_major_link, get_program_link -%}
+{%- from "macros.jinja" import get_applicant_link, get_major_link, get_program_link, get_area_tags -%}
 
 {% for (year, term), term_applicant_ids in applicants_by_term %}
 #### {{ year }} {{ term }}
@@ -9,11 +9,11 @@
 {{- term_applicants.append(applicants[applicant]) or "" }}
 {%- endfor %}
 
-| 申请人 | 专业 | 院系 | 去向 |
+| 申请人 | 专业 | 申请方向 | 去向 |
 | --- | --- | --- | --- |
 {% for applicant in term_applicants | sort(attribute="专业") -%}
 {%- set major = majors[applicant["专业"][0]] -%}
-| {{ get_applicant_link(applicant, "", false) }} | {{ get_major_link(major, show_dept=false) }} | {{ major["院系"] }} |
+| {{ get_applicant_link(applicant, "", false) }} | {{ get_major_link(major, show_dept=false) }} <small>{{ major["院系"] }}</small> | {{ get_area_tags(applicant["申请方向"]) }} |
 {%- if "__destination" in applicant -%}
 {{ get_program_link(programs[applicant["__destination"]], show_icon=true) }}
 {%- else -%}

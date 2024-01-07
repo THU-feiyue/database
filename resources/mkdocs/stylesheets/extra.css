@@ -51,6 +51,19 @@
 }
 
 /* application summary */
+.summary-header {
+    margin-bottom: 0;
+    padding: 1em 1.25em 1em 1.25em;
+    border: 1px solid var(--md-typeset-table-color);
+    border-bottom: none;
+}
+
+.summary-header>* {
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+    font-size: 0.8rem !important;
+}
+
 .summary-inner {
     padding: 1.25em 1.25em 1.25em 1.25em;
     border: 1px solid var(--md-typeset-table-color);
