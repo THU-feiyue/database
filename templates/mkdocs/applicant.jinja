@@ -35,7 +35,9 @@ comments: true
 {%- endif %}
 
 {% if "GPA" in applicant -%}
-<li><b>GPA</b>：{{ applicant["GPA"] }}</li>
+<li><b>GPA</b>：{{ applicant["GPA"] }}
+{%- if applicant["GPA说明"] %} ({{ applicant["GPA说明"] }}){% endif -%}
+</li>
 {%- endif %}
 
 {% if "排名" in applicant -%}
