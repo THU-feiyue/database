@@ -1,7 +1,11 @@
-import requests
-import os
+import re
 from pathlib import Path
 from . import api
+
+
+_image_url_pattern = re.compile(
+    r"https://.+?/workspace/[0-9]+?/asset/.+?(/images/auto-upload/.+?.png)"
+)
 
 
 def get_all_rows(api_key: str) -> tuple[dict, dict, dict, dict]:
@@ -159,3 +163,15 @@ def update_nickname(applicants: dict):
         if "姓名/昵称" not in applicant:
             new_nickname = "申请人" + str(int(applicant["ID"].split("-")[1]))
             applicant["姓名/昵称"] = new_nickname
+
+
+def update_image_url(applicants: dict):
+    for applicant in applicants.values():
+        summary = applicant.get("申请总结", None)
+        if summary is None:
+            continue
+        # replace with retrived url
+        summary = re.sub(
+            _image_url_pattern, lambda m: api.get_image_direct_url(m.group(1)), summary
+        )
+        applicant["申请总结"] = summary

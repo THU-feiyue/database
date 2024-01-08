@@ -1,5 +1,6 @@
 import requests
 
+_api_key = None
 api_base = None
 base_token = None
 dtable_uuid = None
@@ -9,7 +10,7 @@ def seatable_request(method: str, path: str, params: dict = None, data: dict = N
     # make request
     response = requests.request(
         method,
-        f"{api_base}/dtables/{dtable_uuid}{path}",
+        f"{api_base}/dtable-server/api/v1/dtables/{dtable_uuid}{path}",
         params=params,
         data=data,
         headers={"Accept": "application/json", "Authorization": "Bearer " + base_token},
@@ -25,9 +26,11 @@ def seatable_request(method: str, path: str, params: dict = None, data: dict = N
 
 
 def init_base_token(api_key: str):
+    global _api_key
+    _api_key = api_key
     response = requests.request(
         "GET",
-        "https://cloud.seatable.io/api/v2.1/dtable/app-access-token/",
+        f"{api_base}/api/v2.1/dtable/app-access-token/",
         headers={"Accept": "application/json", "Authorization": "Bearer " + api_key},
     )
 
@@ -60,3 +63,13 @@ def get_all_rows(table_name: str):
         query_start += BATCH_SIZE
 
     return ret
+
+
+def get_image_direct_url(file_name: str) -> str:
+    response = requests.request(
+        "GET",
+        f"{api_base}/api/v2.1/dtable/app-download-link",
+        params={"path": f"{file_name}"},
+        headers={"Accept": "application/json", "Authorization": "Bearer " + _api_key},
+    )
+    return response.json()["download_link"]
