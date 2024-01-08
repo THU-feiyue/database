@@ -13,9 +13,7 @@ file_path = Path(os.path.dirname(os.path.realpath(__file__)))
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--api-key", type=str, default=None)
-    parser.add_argument(
-        "--api-base", type=str, default="https://cloud.seatable.io/dtable-server/api/v1"
-    )
+    parser.add_argument("--api-base", type=str, default="https://cloud.seatable.io")
     parser.add_argument("--output-dir", type=str, default="output")
     parser.add_argument(
         "--link-resources",
@@ -61,6 +59,10 @@ if __name__ == "__main__":
         all_applicants, all_datapoints, all_programs, all_majors = backend.get_all_rows(
             api_key
         )
+
+        # replace direct image urls
+        print("Updating image urls...")
+        backend.update_image_url(all_applicants)
 
         # create cache
         cache_dir.mkdir(exist_ok=True)
