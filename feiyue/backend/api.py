@@ -65,11 +65,11 @@ def get_all_rows(table_name: str):
     return ret
 
 
-def get_image_direct_url(file_name: str) -> str:
+def get_image_direct_url(file_name: str, api_key: str) -> str:
     response = requests.request(
         "GET",
         f"{api_base}/api/v2.1/dtable/app-download-link",
         params={"path": f"{file_name}"},
-        headers={"Accept": "application/json", "Authorization": "Bearer " + _api_key},
+        headers={"Accept": "application/json", "Authorization": "Bearer " + api_key},
     )
     return response.json()["download_link"]

@@ -60,10 +60,6 @@ if __name__ == "__main__":
             api_key
         )
 
-        # replace direct image urls
-        print("Updating image urls...")
-        backend.update_image_url(all_applicants)
-
         # create cache
         cache_dir.mkdir(exist_ok=True)
         with open(cache_dir / "applicants.json", "w") as f:
@@ -74,6 +70,23 @@ if __name__ == "__main__":
             json.dump(all_programs, f, ensure_ascii=False)
         with open(cache_dir / "majors.json", "w") as f:
             json.dump(all_majors, f, ensure_ascii=False)
+
+    # download uploaded images from seatable
+    if api_key is not None:
+        image_cache_dir = cache_dir / "images"
+        image_cache_dir.mkdir(exist_ok=True)
+        print("Downloading images...")
+
+        # TODO: more flexible path
+        paths = backend.update_image_path(all_applicants, "../images")
+        for file_name, url_path in paths:
+            path = image_cache_dir / file_name
+            if path.exists():
+                continue
+            # download
+            data = backend.download_image(url_path, api_key)
+            with open(image_cache_dir / file_name, "wb") as f:
+                f.write(data)
 
     print(
         "Done, got",
@@ -113,3 +126,4 @@ if __name__ == "__main__":
     frontend.pre_build()
     frontend.build(all_applicants, all_datapoints, all_programs, all_majors)
     frontend.copy_resources(args.link_resources)
+    frontend.copy_images(image_cache_dir)

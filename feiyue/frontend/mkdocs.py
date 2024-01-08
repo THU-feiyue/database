@@ -4,6 +4,7 @@ from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
 import statistics
 from datetime import timezone, datetime, timedelta
+import shutil
 
 
 class MkDocsFrontend(Frontend):
@@ -249,6 +250,9 @@ class MkDocsFrontend(Frontend):
         )
         with open(self.mkdocs_docs_dir / "area.md", "w") as f:
             f.write(area_index_md)
+
+    def copy_images(self, image_dir: Path):
+        shutil.copytree(image_dir, self.mkdocs_docs_dir / "images", dirs_exist_ok=True)
 
     def _set_applicants_by_term(self, datapoints: dict, applicants: dict) -> dict:
         self.applicants_by_term = {}

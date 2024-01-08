@@ -1,11 +1,11 @@
 import re
 from pathlib import Path
 from . import api
+from collections.abc import Generator
+import requests
 
 
-_image_url_pattern = re.compile(
-    r"https://.+?/workspace/[0-9]+?/asset/.+?(/images/auto-upload/.+?.png)"
-)
+_image_url_pattern = re.compile(r"https://.+?(/images/auto-upload/(.+?\.[a-z|A-Z]+))")
 
 
 def get_all_rows(api_key: str) -> tuple[dict, dict, dict, dict]:
@@ -165,13 +165,24 @@ def update_nickname(applicants: dict):
             applicant["姓名/昵称"] = new_nickname
 
 
-def update_image_url(applicants: dict):
+def update_image_path(applicants: dict, base_path: str) -> list[tuple[str, str]]:
+    ret = []
+
+    def _sub(m):
+        ret.append((m.group(2), m.group(1)))
+        return f"{base_path}/{m.group(2)}"
+
     for applicant in applicants.values():
         summary = applicant.get("申请总结", None)
         if summary is None:
             continue
-        # replace with retrived url
-        summary = re.sub(
-            _image_url_pattern, lambda m: api.get_image_direct_url(m.group(1)), summary
-        )
+
+        # replace url with local path
+        summary = _image_url_pattern.sub(_sub, summary)
         applicant["申请总结"] = summary
+
+    return ret
+
+
+def download_image(path: str, api_key: str) -> bytes:
+    return requests.get(api.get_image_direct_url(path, api_key)).content

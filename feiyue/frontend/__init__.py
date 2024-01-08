@@ -1,6 +1,7 @@
 import json
 import os
 import shutil
+from pathlib import Path
 
 
 class Frontend:
@@ -34,3 +35,6 @@ class Frontend:
                 )
             else:
                 raise Exception(f"Resource {src} not exist")
+
+    def copy_images(self, image_dir: Path):
+        raise NotImplementedError
