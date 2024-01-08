@@ -88,7 +88,7 @@ nav:
   ]
   - 专业: [
     "major/index.md",
-    {% for major in majors -%}
+    {% for major in majors if major["院系"] != "本科外校" -%}
         "{{ major["专业"] }} <small>/ {{ major["院系"] }}</small>": "major/{{ major["ID"] }}.md"{% if loop.index != majors|length %},{% endif %}
     {%- endfor %}
   ]

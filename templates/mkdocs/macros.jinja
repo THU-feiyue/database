@@ -14,8 +14,12 @@
 {{ program["项目"] }}{% if show_school %}@{{ program["学校"] }}{% endif %}{% if show_icon %} {{ get_program_icon(program) }}{% endif %}
 {%- endmacro %}
 
-{% macro get_major_link(major, show_dept=true, show_school=true, base="..") -%}
+{% macro get_major_link(major, show_dept=true, base="..") -%}
+{%- if major["院系"] == "本科外校" -%}
+{{ get_major_desc(major, show_dept=false) }}
+{%- else -%}
 [{{ get_major_desc(major, show_dept) }}]({{ base }}/major/{{ major["ID"] }}.md)
+{%- endif -%}
 {%- endmacro %}
 
 {% macro get_program_link(program, show_icon=true, show_school=true, base="..") -%}

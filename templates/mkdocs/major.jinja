@@ -1,4 +1,4 @@
-{%- from "macros.jinja" import get_applicant_desc, get_program_link, get_program_desc, get_applicant_link, make_metric_card, make_horizontal_lined -%}
+{%- from "macros.jinja" import get_applicant_desc, get_program_link, get_program_desc, get_applicant_link, make_metric_card, make_horizontal_lined, get_area_tags -%}
 ---
 title: {{ major["专业"] }}（{{ major["院系"] }}）
 ---
@@ -36,11 +36,11 @@ title: {{ major["专业"] }}（{{ major["院系"] }}）
 {%- if term_applicants|length > 0%}
 **{{ year }} {{ term }}**
 
-| 申请人 | GPA | 排名 | 去向 |
-| --- | --- | --- | --- |
+| 申请人 | GPA | 排名 | 申请方向 | 去向 |
+| --- | --- | --- | --- | --- |
 {% for applicant in term_applicants -%}
 {%- set applicant = applicants[applicant] -%}
-| {{ get_applicant_link(applicant, show_term=false) }} | {{ applicant["GPA"]|default("N/A") }} | {{ applicant["排名"]|default("N/A") }} | {% if "__destination" in applicant %}{{ get_program_link(programs[applicant["__destination"]]) }}{% else %}N/A{% endif %} |
+| {{ get_applicant_link(applicant, show_term=false) }} | {{ applicant["GPA"]|default("N/A") }} | {{ applicant["排名"]|default("N/A") }} | {{ get_area_tags(applicant["申请方向"]) }} | {% if "__destination" in applicant %}{{ get_program_link(programs[applicant["__destination"]]) }}{% else %}N/A{% endif %} |
 {% endfor %}
 {% endif %}
 {% endfor %}

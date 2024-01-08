@@ -42,7 +42,7 @@ ul.two-col {
 {%- endif %}
 
 {% if "研究生专业" in applicant and applicant["研究生专业"]|length > 0 -%}
-<li markdown><b>研究生专业</b>：{{ get_major_link(majors[applicant["研究生专业"][0]], show_dept=false) }}</li>
+<li markdown><b>研究生专业</b>：{{ applicant["研究生专业"] }}</li>
 {%- endif %}
 
 {% if "GPA" in applicant -%}

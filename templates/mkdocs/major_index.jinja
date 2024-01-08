@@ -5,7 +5,7 @@
 
 <ul markdown>
 
-{% for major in majors -%}
+{% for major in majors if major["院系"] != "本科外校" -%}
 <li markdown>{{ make_horizontal_lined(get_major_link(major), major["申请人"] | length | string + " 个案例") }}</li>
 {% endfor %}
 
