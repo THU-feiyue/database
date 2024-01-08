@@ -34,3 +34,4 @@ jobs:
           token: ${{ github.token }}
           title: Issues found in the database
           body: ${{ env.ISSUES }}
+          labels: 'database'
