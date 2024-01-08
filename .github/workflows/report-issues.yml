@@ -1,0 +1,30 @@
+name: publish 
+on:
+  schedule:
+    - cron: '0 0 * * *' # every day at 00:00 UTC
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+      - id: report
+        run: python3 scripts/report_issues.py --api-key=${{ secrets.SEAFILE_API_KEY }}
+      - name: Check file existence
+        id: check_files
+        uses: andstor/file-existence-action@v1
+        with:
+          files: "output/issues.log"
+      - id: cat
+        if: steps.check_files.outputs.files_exists == 'true'
+        run: cat output/issues.log >> $GITHUB_OUTPUT
+      - name: create an issue
+        uses: dacbd/create-issue-action@main
+        with:
+          token: ${{ github.token }}
+          title: Issues found in the database
+          body: ${{ steps.cat.outputs.stdout }}
