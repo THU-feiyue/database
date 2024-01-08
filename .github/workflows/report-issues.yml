@@ -23,10 +23,14 @@ jobs:
       - id: cat
         if: steps.check_files.outputs.files_exists == 'true'
         run: |
-          echo "::set-output name=issues::$(cat output/issues.log)"
+          {
+            echo 'ISSUES<<EOF'
+            cat output/issues.log
+            echo EOF
+          } >> "$GITHUB_ENV"
       - name: create an issue
         uses: dacbd/create-issue-action@main
         with:
           token: ${{ github.token }}
           title: Issues found in the database
-          body: ${{ steps.cat.outputs.issues }}
+          body: ${{ env.ISSUES }}
