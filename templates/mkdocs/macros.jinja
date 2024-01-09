@@ -39,7 +39,7 @@
 {%- endmacro %}
 
 {% macro get_area_link(area, same_page=false) -%}
-<a href="{% if not same_page %}/area/{% endif %}#{{ area | lower }}" class="md-tag">{{ area }}</a>
+<a href="{% if not same_page %}/area/{% endif %}#{{ area | lower | replace(" ", "-") }}" class="md-tag">{{ area }}</a>
 {%- endmacro %}
 
 {% macro get_area_tags(areas, same_page=false) -%}
