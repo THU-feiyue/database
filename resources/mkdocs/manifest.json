@@ -3,6 +3,7 @@
     "overrides": "overrides",
     "docs/faq.md": "docs/faq.md",
     "docs/contribute.md": "docs/contribute.md",
+    "docs/feedback.md": "docs/feedback.md",
     "stylesheets": "docs/stylesheets",
     "docs/CNAME": "docs/CNAME"
   }
