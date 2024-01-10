@@ -29,4 +29,3 @@ jobs:
           path: |
             feiyue.dtable
             .cache/*.json
-          retention-days: 90
