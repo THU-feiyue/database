@@ -103,10 +103,19 @@
 {% if "数据点" in applicant -%}
 \subsection{申请项目}
 
-\begin{tabular}{lll}
+\begin{longtable}[l]{lll}
     \toprule
     \textbf{项目} & \textbf{学期} & \textbf{结果} \\
     \midrule
+    \endfirsthead
+    \multicolumn{3}{l@{}}{(Continued)}\\
+    \toprule
+    \textbf{项目} & \textbf{学期} & \textbf{结果} \\
+    \midrule
+    \endhead
+    \multicolumn{3}{r@{}}{(Continued on next page)}\\
+    \endfoot
+    \endlastfoot
 {% for datapoint in applicant["数据点"] -%}
 {%- set datapoint = datapoints[datapoint] -%}
     {{ get_program_link(programs[datapoint["项目"][0]]) }} & {{ datapoint["学年"] }} {{ datapoint["学期"] }} & {{ get_datapoint_status(datapoint) }} \\
@@ -115,7 +124,7 @@
     {%- endif %}
 {% endfor %}
     \bottomrule
-\end{tabular}
+\end{longtable}
 
 {%- endif %}
 

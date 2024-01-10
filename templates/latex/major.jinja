@@ -6,8 +6,17 @@
 
 \begin{tabularx}{\textwidth}{lllXX}
 \toprule
-申请人 & GPA & 排名 & 申请方向 & 去向 \\
+\textbf{申请人} & \textbf{GPA} & \textbf{排名} & \textbf{申请方向} & \textbf{去向} \\
 \midrule
+\endfirsthead
+\multicolumn{5}{l@{}}{(Continued)}\\
+\toprule
+\textbf{申请人} & \textbf{GPA} & \textbf{排名} & \textbf{申请方向} & \textbf{去向} \\
+\midrule
+\endhead
+\multicolumn{5}{r@{}}{(Continued on next page)}\\
+\endfoot
+\endlastfoot
 {% for applicant in term_applicants -%}
 {%- set applicant = applicants[applicant] -%}
 {{ get_applicant_link(applicant, "") }} & {{ applicant["GPA"]|default("N/A")|escape }} & {{ applicant["排名"]|default("N/A")|escape }} & {{ get_area_tags(applicant["申请方向"]) }} & {% if "__destination" in applicant %}{{ get_program_link(programs[applicant["__destination"]]) }}{% else %}N/A{% endif %} \\

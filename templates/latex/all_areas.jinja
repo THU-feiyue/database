@@ -6,8 +6,17 @@
 
 \begin{tabularx}{\textwidth}{lXlX}
 \toprule
-申请人 & 专业 & 学期 & 去向 \\
+\textbf{申请人} & \textbf{专业} & \textbf{学期} & \textbf{去向} \\
 \midrule
+\endfirsthead
+\multicolumn{4}{l@{}}{(Continued)}\\
+\toprule
+\textbf{申请人} & \textbf{专业} & \textbf{学期} & \textbf{去向} \\
+\midrule
+\endhead
+\multicolumn{4}{r@{}}{(Continued on next page)}\\
+\endfoot
+\endlastfoot
 {% for tuple in area_applicants %}
 {%- set term = tuple[0] -%}
 {%- set applicant = applicants[tuple[1]] -%}

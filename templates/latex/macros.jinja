@@ -22,11 +22,11 @@
 
 {% macro get_program_desc(program, show_school=true, show_class=true) -%}
 {{ program["项目"] | escape }}{% if show_school %}@{{ program["学校"] | escape }}{% endif %}
-{%- if show_class %}\small{\texttt{ {{ program["类别"] | escape }} }}{% endif %}
+{%- if show_class %}\small{\texttt{ {{ program["类别"] | escape }}{{ "}}" }}{% endif %}
 {%- endmacro %}
 
 {% macro get_program_link(program, show_school=true, show_class=true) -%}
-\hyperref[program:{{ program["ID"] }}]{ {{ get_program_desc(program, show_school, show_class) }} }
+\hyperref[program:{{ program["ID"] }}]{ {{ get_program_desc(program, show_school, show_class) }}{{ "}" }}
 {%- endmacro %}
 
 {% macro get_datapoint_status(datapoint) -%}

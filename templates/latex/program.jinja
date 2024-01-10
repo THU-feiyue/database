@@ -12,8 +12,17 @@
 
 \begin{tabularx}{\textwidth}{XXXl}
     \toprule
-    申请人 & 专业 & 院系 & 结果 \\
+    \textbf{申请人} & \textbf{专业} & \textbf{院系} & \textbf{结果} \\
     \midrule
+    \endfirsthead
+    \multicolumn{4}{l@{}}{(Continued)}\\
+    \toprule
+    \textbf{申请人} & \textbf{专业} & \textbf{院系} & \textbf{结果} \\
+    \midrule
+    \endhead
+    \multicolumn{4}{r@{}}{(Continued on next page)}\\
+    \endfoot
+    \endlastfoot
     {% for applicant in term_applicants -%}
         {% set applicant = applicants[applicant] %}
         {%- set datapoint = program_datapoints | selectattr("申请人", "equalto", applicant["_id"]) | first -%}
