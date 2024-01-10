@@ -1,0 +1,129 @@
+{% from "macros.jinja" import get_applicant_desc, get_major_link, get_program_desc, get_program_link, get_datapoint_status, get_area_tags %}
+{%- set applicant_desc_toc = get_applicant_desc(applicant, majors[applicant["专业"][0]]["院系"], smaller_major=true) %}
+{%- set applicant_desc_title = get_applicant_desc(applicant, majors[applicant["专业"][0]]["院系"], smaller_major=false) %}
+
+\section[
+    {{ applicant_desc_toc }} {% if applicant["__destination"] -%}
+    /\small{ {{ get_program_desc(programs[applicant["__destination"]]) }} }
+    {%- endif %}
+]{ {{ applicant_desc_title }} }
+\label{applicant:{{ applicant["ID"] }}}
+
+\vspace{-1em}
+{{ get_area_tags(applicant["申请方向"]) }}
+
+\subsection{基本信息}
+
+\begin{description}[leftmargin=!,labelwidth=\widthof{\bfseries TOEFL/IELTS}]
+
+    {% if applicant["专业"] -%}
+    \item[专业]{ {{ get_major_link(majors[applicant["专业"][0]]) }} }
+    {%- endif %}
+
+    {% if applicant["研究生专业"] -%}
+    \item[研究生专业]{ {{ applicant["研究生专业"] | escape }} }
+    {%- endif %}
+
+    {% if applicant["GPA"] -%}
+    \item[GPA]{ {{ applicant["GPA"] | escape }} }
+    {%- if applicant["GPA说明"] %} ({{ applicant["GPA说明"] | escape }}){% endif -%}
+    {%- endif %}
+
+    {% if applicant["排名"] -%}
+    \item[排名]{ {{ applicant["排名"] | escape }} }
+    {%- endif %}
+
+    {% if applicant["科研段数"] -%}
+    \item[科研段数]{ {{ applicant["科研段数"] | escape }} }
+    {%- endif %}
+
+    {% if applicant["TOEFL/IELTS 总分"] -%}
+    \item[TOEFL/IELTS]{ {{ applicant["TOEFL/IELTS 总分"] | escape }} }
+        {%- if applicant["TOEFL/IELTS 口语"] -%}
+            (R{{ applicant["TOEFL/IELTS 阅读"] | escape }}, L{{ applicant["TOEFL/IELTS 听力"] | escape }}, S{{ applicant["TOEFL/IELTS 口语"] | escape }}, W{{ applicant["TOEFL/IELTS 写作"] | escape }})
+        {%- endif %}
+    {%- endif %}
+
+    {% if applicant["GRE 总分 (V+Q)"] -%}
+    \item[GRE]{ {{ applicant["GRE 总分 (V+Q)"] | escape }} }
+        {%- if applicant["GRE Quantitative"] %}
+            (V{{ applicant["GRE Verbal"] | escape }}, Q{{ applicant["GRE Quantitative"] | escape }}, W{{ applicant["GRE Writing"] | escape }})
+        {%- endif %}
+    {%- endif %}
+
+    {% if applicant["联系方式"] -%}
+    \item[联系方式]{ {{ applicant["联系方式"] | escape }} }
+    {%- endif %}
+
+    {% if applicant["可提供的帮助"] -%}
+    \item[可提供的帮助]{ {{ applicant["可提供的帮助"]|join(", ") | escape }} }
+    {%- endif %}
+
+    {% if applicant["申请方向说明"] -%}
+        \item[申请方向说明]{
+            {{ applicant["申请方向说明"] | escape }}
+        }
+    {%- endif %}
+
+    {% if applicant["科研/实习经历"] -%}
+        \item[科研/实习经历]{
+            \begin{markdown}
+{{ applicant["科研/实习经历"] | trim }}
+            \end{markdown}
+        }
+    {%- endif %}
+
+    {% if applicant["其他经历"] -%}
+        \item[其他经历]{
+            \begin{markdown}
+{{ applicant["其他经历"] | trim }}
+            \end{markdown}
+        }
+    {%- endif %}
+
+    {% if applicant["推荐信#1"] or applicant["推荐信#2"] or applicant["推荐信#3"] -%}
+        \item[推荐信]{
+            \begin{enumerate}
+                {% if applicant["推荐信#1"] -%}
+                    \item {{ applicant["推荐信#1"]|join(" / ") | escape }}
+                {%- endif %}
+                {% if applicant["推荐信#2"] -%}
+                    \item {{ applicant["推荐信#2"]|join(" / ") | escape }}
+                {%- endif %}
+                {% if applicant["推荐信#3"] -%}
+                    \item {{ applicant["推荐信#3"]|join(" / ") | escape }}
+                {%- endif %}
+            \end{enumerate}
+        }
+    {%- endif %}
+
+
+\end{description}
+
+{% if "数据点" in applicant -%}
+\subsection{申请项目}
+
+\begin{tabular}{lll}
+    \toprule
+    \textbf{项目} & \textbf{学期} & \textbf{结果} \\
+    \midrule
+{% for datapoint in applicant["数据点"] -%}
+{%- set datapoint = datapoints[datapoint] -%}
+    {{ get_program_link(programs[datapoint["项目"][0]]) }} & {{ datapoint["学年"] }} {{ datapoint["学期"] }} & {{ get_datapoint_status(datapoint) }} \\
+    {% if not loop.last -%}
+    \midrule
+    {%- endif %}
+{% endfor %}
+    \bottomrule
+\end{tabular}
+
+{%- endif %}
+
+{% if "申请总结" in applicant and applicant["申请总结"]|trim -%}
+\subsection{申请总结}
+
+\begin{markdown}
+{{ applicant["申请总结"] }}
+\end{markdown}
+
+{%- endif %}

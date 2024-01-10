@@ -1,0 +1,46 @@
+{% macro get_applicant_desc(applicant, major, smaller_major=false) -%}
+{% if "姓名/昵称" in applicant %}{{ applicant["姓名/昵称"] }}{% else %}{{ applicant["ID"] }}{% endif %}
+{%- if major %}{% if smaller_major %}\small{ {{ major }} }{% else %} - {{ major }}{% endif %}{% endif %}
+{%- if show_term and applicant["__term"][0] %} - {{ applicant["__term"][0] }}{{ applicant["__term"][1] }}{% endif %}
+{%- endmacro %}
+
+{% macro get_applicant_link(applicant, major, smaller_major=false) -%}
+\hyperref[applicant:{{ applicant["ID"] }}]{ {{ get_applicant_desc(applicant, major, smaller_major) }} }
+{%- endmacro %}
+
+{% macro get_major_desc(major, show_dept=true) -%}
+{{ major["专业"] }}{% if show_dept %}（{{ major["院系"] }}）{% endif %}
+{%- endmacro %}
+
+{% macro get_major_link(major, show_dept=true) -%}
+{%- if major["院系"] == "本科外校" -%}
+{{ get_major_desc(major, show_dept=false) }}
+{%- else -%}
+\hyperref[major:{{ major["ID"] }}]{ {{ get_major_desc(major, show_dept) }} }
+{%- endif -%}
+{%- endmacro %}
+
+{% macro get_program_desc(program, show_school=true, show_class=true) -%}
+{{ program["项目"] | escape }}{% if show_school %}@{{ program["学校"] | escape }}{% endif %}
+{%- if show_class %}\small{\texttt{ {{ program["类别"] | escape }} }}{% endif %}
+{%- endmacro %}
+
+{% macro get_program_link(program, show_school=true, show_class=true) -%}
+\hyperref[program:{{ program["ID"] }}]{ {{ get_program_desc(program, show_school, show_class) }} }
+{%- endmacro %}
+
+{% macro get_datapoint_status(datapoint) -%}
+{%- set result = datapoint["结果"] -%}
+{%- set admit = result == "Admit" -%}
+{%- set reject = result == "Reject" -%}
+{%- set withdraw = result == "Withdraw" -%}
+{%- if datapoint["最终去向"] %}\colorbox{OliveGreen}{\color{white}{Chosen}}{% else %}{%- if admit %}\colorbox{OliveGreen!30}{% elif reject %}\colorbox{Red!30}{% elif withdraw %}\colorbox{YellowOrange!30}{% else %}\colorbox{RoyalBlue!30}{% endif %}{{ "{" }}{{ result if result else "Unknown" }}{{ "}" }}{% endif %}
+{%- endmacro %}
+
+{% macro get_area_link(area) -%}
+\hyperref[area:{{ area }}]{ \colorbox{Gray!30}{ {{ area }} } }
+{%- endmacro %}
+
+{% macro get_area_tags(areas) -%}
+{% for area in areas -%}{{ get_area_link(area) }} {% endfor %}
+{%- endmacro %}

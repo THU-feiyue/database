@@ -1,0 +1,20 @@
+{% from "macros.jinja" import get_major_desc, get_program_link, get_datapoint_status, get_applicant_link, get_area_tags %}
+
+{% for (year, term), term_applicants in major["__applicants_by_term"] %}
+{%- if term_applicants|length > 0%}
+\subsection*{ {{ year }} {{ term }} }
+
+\begin{tabularx}{\textwidth}{lllXX}
+\toprule
+申请人 & GPA & 排名 & 申请方向 & 去向 \\
+\midrule
+{% for applicant in term_applicants -%}
+{%- set applicant = applicants[applicant] -%}
+{{ get_applicant_link(applicant, "") }} & {{ applicant["GPA"]|default("N/A")|escape }} & {{ applicant["排名"]|default("N/A")|escape }} & {{ get_area_tags(applicant["申请方向"]) }} & {% if "__destination" in applicant %}{{ get_program_link(programs[applicant["__destination"]]) }}{% else %}N/A{% endif %} \\
+{% if not loop.last %}\midrule {% endif %}
+{% endfor %}
+\bottomrule
+\end{tabularx}
+
+{% endif %}
+{% endfor %}

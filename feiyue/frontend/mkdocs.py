@@ -1,13 +1,30 @@
 from . import Frontend
-from ..backend import term_value
 from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
-import statistics
 from datetime import timezone, datetime, timedelta
 import shutil
 
 
 class MkDocsFrontend(Frontend):
+    """
+    Frontend for generating MkDocs files.
+
+    File to be generated:
+        - docs/
+            - index.md
+            - area.md
+            - applicant/
+                - index.md
+                - <applicant_id>.md
+            - major/
+                - index.md
+                - <major_id>.md
+            - program/
+                - index.md
+                - <program_id>.md
+        - mkdocs.yml
+    """
+
     def __init__(self, output_dir, template_dir, resource_dir):
         super().__init__(output_dir, template_dir, resource_dir)
         self.mkdocs_docs_dir = output_dir / "docs"
@@ -32,92 +49,24 @@ class MkDocsFrontend(Frontend):
         mkdocs_docs_dir = output_dir / "docs"
         mkdocs_docs_dir.mkdir(exist_ok=True)
 
-        print("Generating applicant pages...", end=" ")
         self._build_applicant_pages(
             all_applicants, all_datapoints, all_programs, all_majors
         )
-        print("done")
 
-        print("Generating major pages...", end=" ")
         self._build_major_pages(
             all_applicants, all_datapoints, all_programs, all_majors
         )
-        print("done")
 
-        print("Generating program pages...", end=" ")
         self._build_program_pages(
             all_applicants, all_datapoints, all_programs, all_majors
         )
-        print("done")
 
-        print("Generating index pages...", end=" ")
         self._build_index_pages(
             all_applicants,
             all_datapoints,
             all_programs,
             all_majors,
         )
-        print("done")
-
-    def _preprocess(self, all_applicants, all_datapoints, all_programs, all_majors):
-        self._set_applicants_by_term(all_datapoints, all_applicants)
-        self.all_areas = self._get_areas(all_applicants)
-        # get top programs & terms & GPA median & total programs for each major
-        # get final destination for each applicant
-        for major in all_majors.values():
-            major["__applicants_by_term"] = [
-                (
-                    term,
-                    [
-                        applicant
-                        for applicant in applicants
-                        if all_applicants[applicant]["专业"][0] == major["_id"]
-                    ],
-                )
-                for term, applicants in self.applicants_by_term
-            ]
-
-            major["__programs"] = {}
-            major["__program_count"] = 0
-            gpas = []
-            for applicant in major.get("申请人", []):
-                applicant = all_applicants[applicant]
-                for datapoint in applicant.get("数据点", []):
-                    datapoint = all_datapoints[datapoint]
-                    if datapoint["项目"][0] not in major["__programs"]:
-                        major["__programs"][datapoint["项目"][0]] = 0
-                    major["__programs"][datapoint["项目"][0]] += 1
-                    major["__program_count"] += 1
-
-                    if "最终去向" in datapoint and datapoint["最终去向"]:
-                        applicant["__destination"] = datapoint["项目"][0]
-
-                if "GPA" in applicant:
-                    gpas.append(applicant["GPA"])
-
-            major["__programs"] = sorted(
-                list(major["__programs"].items()), key=lambda x: x[1], reverse=True
-            )
-            major["__gpa_median"] = (
-                round(statistics.median(gpas), 2) if len(gpas) > 0 else None
-            )
-
-        # get terms for each program
-        for program in all_programs.values():
-            program["__applicants_by_term"] = [
-                (
-                    term,
-                    [
-                        applicant
-                        for applicant in applicants
-                        if any(
-                            all_datapoints[datapoint]["项目"][0] == program["_id"]
-                            for datapoint in all_applicants[applicant]["数据点"]
-                        )
-                    ],
-                )
-                for term, applicants in self.applicants_by_term
-            ]
 
     def _build_applicant_pages(
         self, all_applicants, all_datapoints, all_programs, all_majors
@@ -253,44 +202,3 @@ class MkDocsFrontend(Frontend):
 
     def copy_images(self, image_dir: Path):
         shutil.copytree(image_dir, self.mkdocs_docs_dir / "images", dirs_exist_ok=True)
-
-    def _set_applicants_by_term(self, datapoints: dict, applicants: dict) -> dict:
-        self.applicants_by_term = {}
-
-        for datapoint in datapoints.values():
-            if datapoint["学年"] is None:
-                continue
-            self.applicants_by_term.setdefault(
-                (datapoint["学年"], datapoint["学期"]), set()
-            ).add((datapoint["申请人"][0]))
-
-        self.applicants_by_term = sorted(
-            [
-                (term, applicants)
-                for term, applicants in self.applicants_by_term.items()
-            ],
-            key=lambda x: term_value(*x[0]),
-            reverse=True,
-        )
-
-        for i, term_tuple in enumerate(self.applicants_by_term):
-            self.applicants_by_term[i] = (
-                term_tuple[0],
-                sorted(
-                    list(term_tuple[1]),
-                    key=lambda x: (applicants[x]["ID"]),
-                    reverse=False,
-                ),
-            )
-
-    def _get_areas(self, all_applicants: dict) -> dict:
-        all_areas: dict[str, list] = {}
-        for term, applicants in self.applicants_by_term:
-            for applicant in applicants:
-                applicant = all_applicants[applicant]
-                areas = applicant["申请方向"]
-                for area in areas:
-                    all_areas.setdefault(area, []).append((term, applicant["_id"]))
-
-        all_areas = dict(sorted(all_areas.items(), key=lambda x: x[0]))
-        return all_areas

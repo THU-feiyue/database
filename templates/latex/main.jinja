@@ -1,0 +1,136 @@
+{% from "macros.jinja" import get_major_desc %}
+\documentclass{report}
+\usepackage{geometry}
+\geometry{
+    a4paper,
+    left=1in,
+    right=1in,
+    top=1in,
+    bottom=1in,
+}
+\usepackage{ctex}
+\usepackage{multicol}
+\usepackage{subfiles}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[
+    colorlinks,
+    linkcolor=black,
+]{hyperref}
+
+\usepackage[most]{tcolorbox}
+{% raw %}
+\newtcolorbox{myquote}{%
+    enhanced, breakable, 
+    size=fbox,
+    frame hidden, boxrule=0pt,
+    sharp corners,
+    colback=Gray!20,
+    left=7.5pt, right=7.5pt, top=7.5pt, bottom=7.5pt,
+    borderline vertical={2pt}{0pt}{Gray!50},
+}
+{% endraw %}
+
+\usepackage[
+    stripIndent,
+    shiftHeadings=1,
+]{markdown}
+{% raw %}
+\markdownSetup{
+    renderers = {
+        link = {%
+            \href{#2}{#1}%
+        },
+        blockQuoteBegin={\begin{myquote}},
+        blockQuoteEnd={\end{myquote}},
+    },
+}
+{% endraw %}
+
+\usepackage{calc}  
+\usepackage{enumitem}  
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{fancyhdr}
+\usepackage[export]{adjustbox}
+
+{# make figures equals \textwith #}
+{% raw %}
+\let\oldincludegraphics\includegraphics
+\renewcommand{\includegraphics}[2][]{%
+  \oldincludegraphics[#1,max width=\linewidth]{#2}}
+{% endraw %}
+{# make figures fixed in position #}
+\makeatletter
+\renewcommand{\fps@figure}{!ht}
+\renewcommand{\fps@table}{!ht}
+\makeatother
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5\baselineskip}
+\setcounter{tocdepth}{1}
+
+\pagestyle{fancy}
+{% raw %}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{#1}{}}
+{% endraw %}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{\rightmark}
+\fancyfoot[C]{\thepage}
+
+\makeatletter
+\let\ps@plain\ps@empty
+\makeatother
+
+
+\begin{document}
+
+\title{清华大学飞跃数据库\\\large{\href{https://database.feiyue.online}{\texttt{database.feiyue.online}}}}
+\date{ {{ build_date }} }
+
+\author{数据库贡献者}
+
+\maketitle
+\thispagestyle{empty}
+\tableofcontents
+
+\newpage
+
+\part{申请案例}
+
+{% for (year, term), term_applicants in applicants_by_term %}
+    \chapter{ {{ year }} {{ term }} }
+    {% for applicant in term_applicants %}
+        \subfile{applicant/{{ applicants[applicant]["ID"] }}.tex}
+        \newpage
+    {% endfor %}
+{% endfor %}
+
+\part{索引}
+
+\chapter{项目}
+
+{% for school, school_programs in programs | groupby("学校") -%}
+    \section{ {{ school | escape }} }
+    {% for program in school_programs | sort(attribute="类别") -%}
+        \subfile{program/{{ program["ID"] }}.tex}
+    {% endfor %}
+    \newpage
+{% endfor %}
+
+\chapter{专业}
+
+{% for major in majors if major["院系"] != "本科外校" -%}
+    \section{ {{ get_major_desc(major, show_dept=true) }} }
+    \label{major:{{ major["ID"] }}}
+    \subfile{major/{{ major["ID"] }}.tex}
+    \newpage
+{% endfor %}
+
+
+\chapter{方向}
+
+\subfile{all_areas.tex}
+
+\end{document}

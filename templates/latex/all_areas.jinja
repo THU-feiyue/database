@@ -1,0 +1,27 @@
+{%- from "macros.jinja" import get_area_tags, get_applicant_link, get_program_link, get_major_link -%}
+
+{% for area, area_applicants in all_areas.items() %}
+\section{ {{ area }} }
+\label{area:{{ area }}}
+
+\begin{tabularx}{\textwidth}{lXlX}
+\toprule
+申请人 & 专业 & 学期 & 去向 \\
+\midrule
+{% for tuple in area_applicants %}
+{%- set term = tuple[0] -%}
+{%- set applicant = applicants[tuple[1]] -%}
+{%- set major = majors[applicant["专业"][0]] -%}
+{{ get_applicant_link(applicant, "", false) }} & {{ get_major_link(major, show_dept=false) }} \small{ {{ major["院系"] }} } & {{ term[0] }} {{ term[1] }} &
+{%- if "__destination" in applicant -%}
+{{ get_program_link(programs[applicant["__destination"]], show_class=true) }}
+{%- else -%}
+N/A
+{%- endif -%}
+\\
+{% if not loop.last %}\midrule{% endif %}
+{% endfor %}
+\bottomrule
+\end{tabularx}
+
+{% endfor %}
