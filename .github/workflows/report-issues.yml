@@ -30,6 +30,7 @@ jobs:
           } >> "$GITHUB_ENV"
       - name: create an issue
         uses: dacbd/create-issue-action@main
+        if: steps.check_files.outputs.files_exists == 'true'
         with:
           token: ${{ github.token }}
           title: Issues found in the database
