@@ -14,14 +14,16 @@
 pip3 install -r requirements.txt
 ```
 
+如果构建为 LaTeX 项目，还需要安装 TeX Live（或使用 Docker）。
+
 ### 构建
 
-目前只支持构建为 MkDocs 网页。访问 API 需要有 SeaTable 的 API Key，目前只有管理员具有访问权限。如果没有 API Key，请参考下文。
+目前支持构建为 MkDocs 网页或 LaTeX 文档（PDF）。访问 API 需要有 SeaTable 的 API Key，目前只有管理员具有访问权限。如果没有 API Key，请参考下文。
 
 使用如下命令构建：
 
 ```bash
-python3 maker.py --api-key=<seatable-api-key> --frontend=mkdocs [--link-resources] [--cached]
+python3 maker.py --api-key=<seatable-api-key> --frontend={mkdocs|latex} [--link-resources] [--cached]
 ```
 
 - 使用 `--link-resources` 时，复制静态文档到输出文件夹时将直接创建符号链接，而不是复制文件，这样可以使得 MkDocs 检测到文件的更新，适合在本地开发时打开。
@@ -29,13 +31,29 @@ python3 maker.py --api-key=<seatable-api-key> --frontend=mkdocs [--link-resource
 
 如果没有 API Key，可以到 [`publish` Action](https://github.com/THU-feiyue/database/actions/workflows/publish.yml) 中最新的 run 处下载名为 `database-backup` 的 artifact，解压后将 `.cache` 目录复制到项目根目录下，并使用 `--cached` 参数即可。
 
-### 预览
+### 预览/编译
 
-构建完成后，MkDocs 项目将会被输出到 `output` 目录下。使用如下命令启动预览服务器：
+#### MkDocs
+
+构建完成后，MkDocs 项目将会被输出到 `output` 目录下。在 `output` 目录使用如下命令启动预览服务器：
 
 ```bash
-cd output
 mkdocs serve
+```
+
+#### LaTeX
+
+构建完成后，LaTeX 文件将会被输出到 `output/latex` 目录下。在 `output/latex` 目录使用如下命令编译 PDF：
+
+```bash
+latexmk -xelatex -file-line-error -shell-escape -halt-on-error -interaction=nonstopmode main.tex
+```
+
+也可使用 Docker 编译：
+
+```bash
+docker run --rm -v $(pwd):/feiyue -w /feiyue ghcr.io/xu-cheng/texlive-full \
+    latexmk -xelatex -file-line-error -shell-escape -halt-on-error -interaction=nonstopmode main.tex
 ```
 
 ## 项目结构
