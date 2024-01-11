@@ -3,19 +3,21 @@ from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
 import shutil
 from datetime import timezone, datetime, timedelta
+import re
 
 
 class LatexFrontend(Frontend):
     """
     Frontend for generating LaTeX files.
 
-    File to be generated:
+    Files to be generated:
         - main.tex
-        - applicants/
+        - all_areas.tex
+        - applicant/
             - <applicant_id>.tex
-        - majors/
+        - major/
             - <major_id>.tex
-        - programs/
+        - program/
             - <program_id>.tex
     """
 
@@ -39,8 +41,20 @@ class LatexFrontend(Frontend):
 
             return s
 
+        list_re = re.compile(r"^( +)(\*|-|\+)", flags=re.MULTILINE)
+
+        def multiply_list_spaces(s: str) -> str:
+            """
+            Multiply the number of spaces of list items by 2.
+
+            SeaTable's editor uses 2 spaces for indentation, but `markdown` package
+            in LaTeX only supports 4. (https://github.com/Witiko/markdown/issues/55)
+            """
+            return list_re.sub(lambda x: " " * (len(x.group(1)) * 2) + x.group(2), s)
+
         env = Environment(loader=FileSystemLoader(self.template_dir))
         env.filters["escape"] = latex_escape
+        env.filters["fix_list"] = multiply_list_spaces
         self.applicant_template = env.get_template("applicant.jinja")
         self.major_template = env.get_template("major.jinja")
         self.program_template = env.get_template("program.jinja")
@@ -50,9 +64,7 @@ class LatexFrontend(Frontend):
     def build(self, all_applicants, all_datapoints, all_programs, all_majors):
         self._preprocess(all_applicants, all_datapoints, all_programs, all_majors)
 
-        output_dir = Path(self.output_dir)
-        output_dir.mkdir(exist_ok=True)
-        self.docs_dir.mkdir(exist_ok=True)
+        self.docs_dir.mkdir(exist_ok=True, parents=True)
 
         self._build_applicant_pages(
             all_applicants, all_datapoints, all_programs, all_majors
@@ -148,7 +160,6 @@ class LatexFrontend(Frontend):
         sorted_majors = sorted(
             list(all_majors.values()),
             key=lambda x: x["院系"],
-            reverse=True,
         )
 
         sorted_programs = sorted(

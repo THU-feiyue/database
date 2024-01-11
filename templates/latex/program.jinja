@@ -10,7 +10,7 @@
 {%- if term_applicants|length > 0%}
 \subsubsection{ {{ year }} {{ term }} }
 
-\begin{tabularx}{\textwidth}{XXXl}
+\begin{tabularx}{\textwidth}{lXXl}
     \toprule
     \textbf{申请人} & \textbf{专业} & \textbf{院系} & \textbf{结果} \\
     \midrule
@@ -27,7 +27,7 @@
         {% set applicant = applicants[applicant] %}
         {%- set datapoint = program_datapoints | selectattr("申请人", "equalto", applicant["_id"]) | first -%}
         {%- set major = majors[applicant["专业"][0]] -%}
-        {{ get_applicant_link(applicant, "", false) }} & {{ get_major_link(major, show_dept=false) }} & {{ major["院系"] }} &
+        {{ get_applicant_link(applicant, "") }} & {{ get_major_link(major, show_dept=false) }} & {{ major["院系"] }} &
         {%- if datapoint %}{{ get_datapoint_status(datapoint) }}{% endif %} \\
         {% if not loop.last %}\midrule{% endif %}
     {% endfor %}

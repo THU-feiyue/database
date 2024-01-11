@@ -12,10 +12,8 @@
 \usepackage{multicol}
 \usepackage{subfiles}
 \usepackage[dvipsnames]{xcolor}
-\usepackage[
-    colorlinks,
-    linkcolor=black,
-]{hyperref}
+\usepackage[colorlinks]{hyperref}
+\usepackage{relsize}
 
 \usepackage[most]{tcolorbox}
 {% raw %}
@@ -60,15 +58,20 @@
 \renewcommand{\includegraphics}[2][]{%
   \oldincludegraphics[#1,max width=\linewidth]{#2}}
 {% endraw %}
+
 {# make figures fixed in position #}
+\usepackage{float}
 \makeatletter
-\renewcommand{\fps@figure}{!ht}
-\renewcommand{\fps@table}{!ht}
+\renewcommand{\fps@figure}{H}
+\renewcommand{\fps@table}{H}
 \makeatother
 
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.5\baselineskip}
 \setcounter{tocdepth}{1}
+{# restore spacing between toc items #}
+\usepackage{tocloft}
+\setlength{\cftbeforesecskip}{0pt}
 
 \pagestyle{fancy}
 {% raw %}
@@ -84,19 +87,19 @@
 \let\ps@plain\ps@empty
 \makeatother
 
-
 \begin{document}
 
 \keepXColumns {# needed for full-width tabularx to work #}
 
 \title{清华大学飞跃数据库\\\large{\href{https://database.feiyue.online}{\texttt{database.feiyue.online}}}}
 \date{ {{ build_date }} }
-
 \author{数据库贡献者}
 
 \maketitle
 \thispagestyle{empty}
+\hypersetup{linkcolor=black}
 \tableofcontents
+\hypersetup{linkcolor=RoyalBlue}
 
 \newpage
 

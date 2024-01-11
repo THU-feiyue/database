@@ -21,7 +21,7 @@
 {%- set term = tuple[0] -%}
 {%- set applicant = applicants[tuple[1]] -%}
 {%- set major = majors[applicant["专业"][0]] -%}
-{{ get_applicant_link(applicant, "", false) }} & {{ get_major_link(major, show_dept=false) }} \small{ {{ major["院系"] }} } & {{ term[0] }} {{ term[1] }} &
+{{ get_applicant_link(applicant, "") }} & {{ get_major_link(major, show_dept=false) }}\small{{"{"}}{{ major["院系"] }}{{"}"}} & {{ term[0] }} {{ term[1] }} &
 {%- if "__destination" in applicant -%}
 {{ get_program_link(programs[applicant["__destination"]], show_class=true) }}
 {%- else -%}

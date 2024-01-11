@@ -1,11 +1,11 @@
-{% macro get_applicant_desc(applicant, major, smaller_major=false) -%}
+{% macro get_applicant_desc(applicant, major) -%}
 {% if "姓名/昵称" in applicant %}{{ applicant["姓名/昵称"] }}{% else %}{{ applicant["ID"] }}{% endif %}
-{%- if major %}{% if smaller_major %}\small{ {{ major }} }{% else %} - {{ major }}{% endif %}{% endif %}
+{%- if major %}\smaller{ {{ major }} }{% endif %}
 {%- if show_term and applicant["__term"][0] %} - {{ applicant["__term"][0] }}{{ applicant["__term"][1] }}{% endif %}
 {%- endmacro %}
 
-{% macro get_applicant_link(applicant, major, smaller_major=false) -%}
-\hyperref[applicant:{{ applicant["ID"] }}]{ {{ get_applicant_desc(applicant, major, smaller_major) }} }
+{% macro get_applicant_link(applicant, major) -%}
+\hyperref[applicant:{{ applicant["ID"] }}]{ {{ get_applicant_desc(applicant, major) }} }
 {%- endmacro %}
 
 {% macro get_major_desc(major, show_dept=true) -%}
@@ -22,7 +22,7 @@
 
 {% macro get_program_desc(program, show_school=true, show_class=true) -%}
 {{ program["项目"] | escape }}{% if show_school %}@{{ program["学校"] | escape }}{% endif %}
-{%- if show_class %}\small{\texttt{ {{ program["类别"] | escape }}{{ "}}" }}{% endif %}
+{%- if show_class %}\smaller{\texttt{ {{ program["类别"] | escape }}{{ "}}" }}{% endif %}
 {%- endmacro %}
 
 {% macro get_program_link(program, show_school=true, show_class=true) -%}
@@ -34,11 +34,11 @@
 {%- set admit = result == "Admit" -%}
 {%- set reject = result == "Reject" -%}
 {%- set withdraw = result == "Withdraw" -%}
-{%- if datapoint["最终去向"] %}\colorbox{OliveGreen}{\color{white}{Chosen}}{% else %}{%- if admit %}\colorbox{OliveGreen!30}{% elif reject %}\colorbox{Red!30}{% elif withdraw %}\colorbox{YellowOrange!30}{% else %}\colorbox{RoyalBlue!30}{% endif %}{{ "{" }}{{ result if result else "Unknown" }}{{ "}" }}{% endif %}
+{%- if datapoint["最终去向"] %}\colorbox{OliveGreen}{\color{white}{Chosen}}{% else %}{%- if admit %}\colorbox{OliveGreen!30}{% elif reject %}\colorbox{Red!30}{% elif withdraw %}\colorbox{YellowOrange!30}{% else %}\colorbox{Cerulean!30}{% endif %}{{ "{" }}{{ result if result else "Unknown" }}{{ "}" }}{% endif %}
 {%- endmacro %}
 
 {% macro get_area_link(area) -%}
-\hyperref[area:{{ area }}]{ \colorbox{Gray!30}{ {{ area }} } }
+\hyperref[area:{{ area }}]{\colorbox{Gray!20}{\color{black}\texttt{{"{{"}}{{ area }}{{ "}}}}" }}
 {%- endmacro %}
 
 {% macro get_area_tags(areas) -%}
