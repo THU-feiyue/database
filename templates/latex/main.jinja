@@ -33,6 +33,7 @@
     shiftHeadings=1,
 ]{markdown}
 {% raw %}
+\let\oldRenderHFive\markdownRendererHeadingFive
 \markdownSetup{
     renderers = {
         link = {%
@@ -40,6 +41,12 @@
         },
         blockQuoteBegin={\begin{myquote}},
         blockQuoteEnd={\end{myquote}},
+        % forbid h1-h3
+        headingOne={\markdownRendererHeadingFour{#1}},
+        headingTwo={\markdownRendererHeadingFour{#1}},
+        headingThree={\markdownRendererHeadingFour{#1}},
+        % add italic to h5
+        headingFive={\oldRenderHFive{\textit{#1}}},
     },
 }
 {% endraw %}
@@ -56,7 +63,8 @@
 {% raw %}
 \let\oldincludegraphics\includegraphics
 \renewcommand{\includegraphics}[2][]{%
-  \oldincludegraphics[#1,max width=\linewidth]{#2}}
+  \oldincludegraphics[#1,max width=\linewidth]{#2}
+}
 {% endraw %}
 
 {# make figures fixed in position #}
