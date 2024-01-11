@@ -55,7 +55,8 @@
 @media (min-width: 800px) {
     .summary-inner {
         padding: 1.25em 1.25em 1.25em 1.25em;
-        border: 1px solid var(--md-typeset-table-color);
+        border: .05rem solid var(--md-typeset-table-color);
+        border-radius: .1rem;
     }
 
     .summary-inner> :first-child {
@@ -67,4 +68,11 @@
         margin-bottom: 0;
         padding-bottom: 0;
     }
+}
+
+.summary-inner h4 {
+    text-decoration: underline;
+    text-decoration-color: var(--md-typeset-table-color);
+    text-underline-offset: 0.5em;
+    text-decoration-thickness: .15rem;
 }
