@@ -3,6 +3,16 @@ on:
   push:
     branches: 
       - main
+    paths-ignore:
+      - README.md
+      - LICENSE
+      - .gitignore
+      - templates/latex/*
+      - scripts/report_issues.py
+      - resources/latex/*
+      - feiyue/frontend/latex.py
+      - .github/workflows/*
+      - '!.github/workflows/publish.yml'
   schedule:
     - cron: '0 */6 * * *'
   workflow_dispatch:
