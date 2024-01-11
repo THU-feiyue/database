@@ -28,4 +28,4 @@ jobs:
           name: database-backup
           path: |
             feiyue.dtable
-            .cache/*.json
+            .cache/*
