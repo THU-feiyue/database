@@ -55,6 +55,14 @@ def get_duplicate_datapoints_of_applicants(
     return ret
 
 
+def get_uncategorized_areas(applicants: dict) -> list[str]:
+    return [
+        applicant["ID"]
+        for applicant in applicants.values()
+        if "未分类" in applicant.get("申请方向", [])
+    ]
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--api-key", type=str, default=None)
@@ -91,7 +99,7 @@ if __name__ == "__main__":
     if len(incomplete_programs) == 0:
         print("No incomplete programs found.", file=sys.stderr)
     else:
-        log("**Incomplete programs**")
+        log("**Incomplete programs**\n")
         for program_id in incomplete_programs:
             log(f" - {program_id}")
         log("")
@@ -103,7 +111,17 @@ if __name__ == "__main__":
     if len(duplicate_datapoints) == 0:
         print("No duplicate datapoints found.", file=sys.stderr)
     else:
-        log("**Duplicate datapoints**")
+        log("**Duplicate datapoints**\n")
         for applicant_id, programs in duplicate_datapoints.items():
             log(f" - {applicant_id}: {programs}")
+        log("")
+
+    uncategorized_areas = get_uncategorized_areas(all_applicants)
+
+    if len(uncategorized_areas) == 0:
+        print("No uncategorized areas found.", file=sys.stderr)
+    else:
+        log("**Applicants with uncategorized application areas**\n")
+        for applicant_id in uncategorized_areas:
+            log(f" - {applicant_id}")
         log("")
