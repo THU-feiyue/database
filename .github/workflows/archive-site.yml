@@ -4,12 +4,60 @@ on:
     - cron: '0 0 * * 1' # every Monday at 00:00 UTC
   workflow_dispatch:
 
+# Archiving sites is slow and can exceed the 6 hour limit for a single job.
+# To work around this, we split it into multiple jobs.
+
 jobs:
-  archive:
+  archive1:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-python@v2
         with:
-          node-version: '14'
-      - run: npm install -g wayback-sitemap-archive
-      - run: wayback-sitemap-archive https://database.feiyue.online/sitemap.xml
+          python-version: '3.x'
+      - run: pip install requests lxml
+      - run: python scripts/archive_site.py --start=0 --end=50 https://database.feiyue.online/sitemap.xml
+
+  archive2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - run: pip install requests lxml
+      - run: python scripts/archive_site.py --start=50 --end=100 https://database.feiyue.online/sitemap.xml
+
+  archive3:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - run: pip install requests lxml
+      - run: python scripts/archive_site.py --start=100 --end=150 https://database.feiyue.online/sitemap.xml
+
+  archive4:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - run: pip install requests lxml
+      - run: python scripts/archive_site.py --start=150 --end=200 https://database.feiyue.online/sitemap.xml
+
+  archive5:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - run: pip install requests lxml
+      - run: python scripts/archive_site.py --start=200 --end=250 https://database.feiyue.online/sitemap.xml
+
+  archive-rest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - run: pip install requests lxml
+      - run: python scripts/archive_site.py --start=250 https://database.feiyue.online/sitemap.xml
