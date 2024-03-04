@@ -9,6 +9,7 @@ on:
       - .gitignore
       - templates/latex/*
       - scripts/report_issues.py
+      - scripts/archive_site.py
       - resources/latex/*
       - feiyue/frontend/latex.py
       - .github/workflows/*
