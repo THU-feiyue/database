@@ -159,12 +159,12 @@ class LatexFrontend(Frontend):
     ):
         sorted_majors = sorted(
             list(all_majors.values()),
-            key=lambda x: x["院系"],
+            key=lambda x: (x["院系"], x["ID"]),
         )
 
         sorted_programs = sorted(
             list(all_programs.values()),
-            key=lambda x: len(x["数据点"]),
+            key=lambda x: (len(x["数据点"]), x["ID"]),
             reverse=True,
         )
 

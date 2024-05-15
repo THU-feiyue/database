@@ -130,7 +130,6 @@
     {% for program in school_programs | sort(attribute="类别") -%}
         \subfile{program/{{ program["ID"] }}.tex}
     {% endfor %}
-    \newpage
 {% endfor %}
 
 \chapter{专业}

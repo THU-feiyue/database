@@ -75,7 +75,7 @@ class Frontend:
                     if "最终去向" in datapoint and datapoint["最终去向"]:
                         applicant["__destination"] = datapoint["项目"][0]
 
-                if "GPA" in applicant:
+                if applicant.get("GPA") is not None:
                     gpas.append(applicant["GPA"])
 
             major["__programs"] = sorted(
