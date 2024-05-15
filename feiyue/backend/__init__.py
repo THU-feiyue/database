@@ -14,8 +14,18 @@ def get_all_rows(api_key: str) -> tuple[dict, dict, dict, dict]:
     all_applicants = api.get_all_rows("申请人")
     all_programs = api.get_all_rows("项目")
     all_datapoints = api.get_all_rows("数据点")
+    _rebuild_relations(all_applicants, all_datapoints)
 
     return all_applicants, all_datapoints, all_programs, all_majors
+
+
+def _rebuild_relations(applicants: dict, datapoints: dict):
+    # applicant -> datapoints
+    for applicant in applicants.values():
+        applicant["数据点"].clear()
+    for id, datapoint in datapoints.items():
+        if len(datapoint["申请人"]) > 0:
+            applicants[datapoint["申请人"][0]]["数据点"].append(id)
 
 
 def term_value(year: int, term: str) -> float:
@@ -153,7 +163,10 @@ def set_term(applicants: dict, datapoints: dict, key: str):
     for applicant in applicants.values():
         # get max term
         applicant[key] = max(
-            [(datapoints[dp]["学年"], datapoints[dp]["学期"]) for dp in applicant["数据点"]],
+            [
+                (datapoints[dp]["学年"], datapoints[dp]["学期"])
+                for dp in applicant["数据点"]
+            ],
             key=lambda x: term_value(x[0], x[1]),
         )
 
