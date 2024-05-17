@@ -22,7 +22,7 @@ def get_all_rows(api_key: str) -> tuple[dict, dict, dict, dict]:
 def _rebuild_relations(applicants: dict, datapoints: dict):
     # applicant -> datapoints
     for applicant in applicants.values():
-        applicant["数据点"].clear()
+        applicant["数据点"] = []
     for id, datapoint in datapoints.items():
         if len(datapoint["申请人"]) > 0:
             applicants[datapoint["申请人"][0]]["数据点"].append(id)
