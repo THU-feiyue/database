@@ -56,10 +56,16 @@ def filter_out_invalid(
         )
         if not valid:
             return False
+        has_chosen = False
         for datapoint in applicant["数据点"]:
             if datapoint not in datapoints:
                 has_invalid = True
                 applicant["数据点"].remove(datapoint)
+            else:
+                if datapoints[datapoint].get("最终去向"):
+                    has_chosen = True
+        if not has_chosen:
+            return False
         if applicant["专业"][0] not in majors:
             return False
         return True
