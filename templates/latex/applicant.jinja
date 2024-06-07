@@ -14,48 +14,48 @@
 
 \begin{description}[leftmargin=!,labelwidth=\widthof{\bfseries TOEFL/IELTSX}]
 
-    {% if applicant["专业"] != none -%}
+    {% if applicant["专业"] -%}
         \item[专业]{ {{ get_major_link(majors[applicant["专业"][0]], show_dept=false) }} }
     {%- endif %}
 
-    {% if applicant["研究生专业"] != none -%}
+    {% if applicant["研究生专业"] -%}
         \item[研究生专业]{ {{ applicant["研究生专业"] | escape }} }
     {%- endif %}
 
-    {% if applicant["GPA"] != none -%}
+    {% if applicant["GPA"] -%}
         \item[GPA]{ {{ applicant["GPA"] | escape }} }
     {%- if applicant["GPA说明"] %} ({{ applicant["GPA说明"] | escape }}){% endif -%}
     {%- endif %}
 
-    {% if applicant["排名"] != none -%}
+    {% if applicant["排名"] -%}
         \item[排名]{ {{ applicant["排名"] | escape }} }
     {%- endif %}
 
-    {% if applicant["TOEFL/IELTS 总分"] != none -%}
+    {% if applicant["TOEFL/IELTS 总分"] -%}
         \item[TOEFL/IELTS]{ {{ applicant["TOEFL/IELTS 总分"] | escape }} }
         {%- if applicant["TOEFL/IELTS 口语"] -%}
             (R{{ applicant["TOEFL/IELTS 阅读"] | escape }}, L{{ applicant["TOEFL/IELTS 听力"] | escape }}, S{{ applicant["TOEFL/IELTS 口语"] | escape }}, W{{ applicant["TOEFL/IELTS 写作"] | escape }})
         {%- endif %}
     {%- endif %}
 
-    {% if applicant["GRE 总分 (V+Q)"] != none -%}
+    {% if applicant["GRE 总分 (V+Q)"] -%}
         \item[GRE]{ {{ applicant["GRE 总分 (V+Q)"] | escape }} }
         {%- if applicant["GRE Quantitative"] %}
             (V{{ applicant["GRE Verbal"] | escape }}, Q{{ applicant["GRE Quantitative"] | escape }}, W{{ applicant["GRE Writing"] | escape }})
         {%- endif %}
     {%- endif %}
 
-    {% if applicant["申请方向说明"] != none -%}
+    {% if applicant["申请方向说明"] -%}
         \item[申请方向]{
             {{ applicant["申请方向说明"] | escape }}
         }
     {%- endif %}
 
-    {% if applicant["科研段数"] != none -%}
+    {% if applicant["科研段数"] -%}
         \item[科研段数]{ {{ applicant["科研段数"] | escape }} }
     {%- endif %}
 
-    {% if applicant["科研/实习经历"] != none -%}
+    {% if applicant["科研/实习经历"] -%}
         \item[科研/实习经历]{
             \begin{markdown}
 {{ applicant["科研/实习经历"] | trim | fix_list }}
@@ -63,7 +63,7 @@
         }
     {%- endif %}
 
-    {% if applicant["其他经历"] != none -%}
+    {% if applicant["其他经历"] -%}
         \item[其他经历]{
             \begin{markdown}
 {{ applicant["其他经历"] | trim | fix_list }}
@@ -71,34 +71,34 @@
         }
     {%- endif %}
 
-    {% if applicant["推荐信#1"] != none or applicant["推荐信#2"] != none or applicant["推荐信#3"] != none -%}
+    {% if applicant["推荐信#1"] or applicant["推荐信#2"] or applicant["推荐信#3"] -%}
         \item[推荐信]{
             \begin{enumerate}
-                {% if applicant["推荐信#1"] != none -%}
+                {% if applicant["推荐信#1"] -%}
                     \item {{ applicant["推荐信#1"]|join(" / ") | escape }}
                 {%- endif %}
-                {% if applicant["推荐信#2"] != none -%}
+                {% if applicant["推荐信#2"] -%}
                     \item {{ applicant["推荐信#2"]|join(" / ") | escape }}
                 {%- endif %}
-                {% if applicant["推荐信#3"] != none -%}
+                {% if applicant["推荐信#3"] -%}
                     \item {{ applicant["推荐信#3"]|join(" / ") | escape }}
                 {%- endif %}
             \end{enumerate}
         }
     {%- endif %}
 
-    {% if applicant["联系方式"] != none -%}
+    {% if applicant["联系方式"] -%}
         \item[联系方式]{ {{ applicant["联系方式"] | escape }} }
     {%- endif %}
 
-    {% if applicant["可提供的帮助"] != none -%}
+    {% if applicant["可提供的帮助"] -%}
         \item[可提供的帮助]{ {{ applicant["可提供的帮助"]|join(", ") | escape }} }
     {%- endif %}
 
 
 \end{description}
 
-{% if applicant["数据点"] != none -%}
+{% if applicant["数据点"] -%}
 \subsection{申请项目}
 
 \begin{longtable}[l]{lll}
@@ -126,7 +126,7 @@
 
 {%- endif %}
 
-{% if applicant["申请总结"] != none and applicant["申请总结"]|trim -%}
+{% if applicant["申请总结"] and applicant["申请总结"]|trim -%}
 \subsection{申请总结}
 
 \begin{markdown}

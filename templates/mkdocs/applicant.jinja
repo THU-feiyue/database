@@ -37,83 +37,83 @@ ul.two-col {
 ## 基本信息
 
 <ul class="two-col" markdown>
-{% if applicant["专业"] != none -%}
+{% if applicant["专业"] -%}
 <li markdown><b>专业</b>：{{ get_major_link(majors[applicant["专业"][0]], show_dept=false) }}</li>
 {%- endif %}
 
-{% if applicant["研究生专业"] != none -%}
+{% if applicant["研究生专业"] -%}
 <li markdown><b>研究生专业</b>：{{ applicant["研究生专业"] }}</li>
 {%- endif %}
 
-{% if applicant["GPA"] != none -%}
+{% if applicant["GPA"] -%}
 <li><b>GPA</b>：{{ applicant["GPA"] }}
 {%- if applicant["GPA说明"] %} ({{ applicant["GPA说明"] }}){% endif -%}
 </li>
 {%- endif %}
 
-{% if applicant["排名"] != none -%}
+{% if applicant["排名"] -%}
 <li><b>排名</b>：{{ applicant["排名"] }}</li>
 {%- endif %}
 
-{% if applicant["科研段数"] != none -%}
+{% if applicant["科研段数"] -%}
 <li><b>科研段数</b>：{{ applicant["科研段数"] }}</li>
 {%- endif %}
 
-{% if applicant["TOEFL/IELTS 总分"] != none -%}
+{% if applicant["TOEFL/IELTS 总分"] -%}
 <li><b>TOEFL/IELTS</b>：{{ applicant["TOEFL/IELTS 总分"] }}{% if "TOEFL/IELTS 口语" in applicant %} (R{{ applicant["TOEFL/IELTS 阅读"] }}, L{{ applicant["TOEFL/IELTS 听力"] }}, S{{ applicant["TOEFL/IELTS 口语"] }}, W{{ applicant["TOEFL/IELTS 写作"] }}){%- endif %}
 </li>
 {%- endif %}
 
-{% if applicant["GRE 总分 (V+Q)"] != none -%}
+{% if applicant["GRE 总分 (V+Q)"] -%}
 <li><b>GRE</b>：{{ applicant["GRE 总分 (V+Q)"] }}{% if "GRE Quantitative" in applicant %} (V{{ applicant["GRE Verbal"] }}, Q{{ applicant["GRE Quantitative"] }}, W{{ applicant["GRE Writing"] }}){%- endif %}
 </li>
 {%- endif %}
 
-{% if applicant["联系方式"] != none -%}
+{% if applicant["联系方式"] -%}
 <li><b>联系方式</b>：{{ applicant["联系方式"] }}</li>
 {%- endif %}
 
-{% if applicant["可提供的帮助"] != none -%}
+{% if applicant["可提供的帮助"] -%}
 <li><b>可提供的帮助</b>：{{ applicant["可提供的帮助"]|join(", ") }}</li>
 {%- endif %}
 
 </ul>
 
-{% if applicant["申请方向说明"] != none -%}
+{% if applicant["申请方向说明"] -%}
 **申请方向**
 
 {{ applicant["申请方向说明"] }}
 {%- endif %}
 
 
-{% if applicant["科研/实习经历"] != none -%}
+{% if applicant["科研/实习经历"] -%}
 **科研/实习经历**
 
 {{ applicant["科研/实习经历"] }}
 {%- endif %}
 
-{% if applicant["其他经历"] != none -%}
+{% if applicant["其他经历"] -%}
 **其他经历**
 
 {{ applicant["其他经历"] }}
 {%- endif %}
 
-{% if applicant["推荐信#1"] != none or applicant["推荐信#2"] != none or applicant["推荐信#3"] != none -%}
+{% if applicant["推荐信#1"] or applicant["推荐信#2"] or applicant["推荐信#3"] -%}
 **推荐信**
 
-{% if applicant["推荐信#1"] != none -%}
+{% if applicant["推荐信#1"] -%}
 1. {{ applicant["推荐信#1"]|join(", ") }}
 {%- endif %}
-{% if applicant["推荐信#2"] != none -%}
+{% if applicant["推荐信#2"] -%}
 2. {{ applicant["推荐信#2"]|join(", ") }}
 {%- endif %}
-{% if applicant["推荐信#3"] != none -%}
+{% if applicant["推荐信#3"] -%}
 3. {{ applicant["推荐信#3"]|join(", ") }}
 {%- endif %}
 
 {%- endif %}
 
-{% if applicant["数据点"] != none -%}
+{% if applicant["数据点"] -%}
 ## 申请项目
 
 | 项目 | 学期 | 结果 |
@@ -124,7 +124,7 @@ ul.two-col {
 {% endfor %}
 {%- endif %}
 
-{% if applicant["申请总结"] != none and applicant["申请总结"]|trim -%}
+{% if applicant["申请总结"] and applicant["申请总结"]|trim -%}
 ## 申请总结
 <div class="summary-inner" markdown>
 
