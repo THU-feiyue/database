@@ -128,7 +128,7 @@ ul.two-col {
 ## 申请总结
 <div class="summary-inner" markdown>
 
-{{ applicant["申请总结"] }}
+{{ applicant["申请总结"] | replace("\\@", "@") }}
 
 </div>
 {%- endif %}
