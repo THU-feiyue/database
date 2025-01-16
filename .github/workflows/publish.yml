@@ -34,7 +34,7 @@ jobs:
         env:
           SEAFILE_ACCOUNT_TOKEN: ${{ secrets.SEAFILE_ACCOUNT_TOKEN }}
       - name: 'Upload Artifact'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: database-backup
           path: |
