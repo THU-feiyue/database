@@ -45,7 +45,10 @@ def get_duplicate_datapoints_of_applicants(
         duplicate_programs = [
             program
             for program, count in collections.Counter(
-                [programs[datapoints[dp]["项目"][0]]["ID"] for dp in applicant["数据点"]]
+                [
+                    programs[datapoints[dp]["项目"][0]]["ID"]
+                    for dp in applicant["数据点"]
+                ]
             ).items()
             if count > 1
         ]
@@ -59,7 +62,7 @@ def get_uncategorized_areas(applicants: dict) -> list[str]:
     return [
         applicant["ID"]
         for applicant in applicants.values()
-        if "未分类" in applicant.get("申请方向", [])
+        if "未分类" in (applicant.get("申请方向") or [])
     ]
 
 
