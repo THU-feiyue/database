@@ -48,6 +48,7 @@ def get_duplicate_datapoints_of_applicants(
                 [
                     programs[datapoints[dp]["项目"][0]]["ID"]
                     for dp in applicant["数据点"]
+                    if datapoints[dp]["项目"]
                 ]
             ).items()
             if count > 1
