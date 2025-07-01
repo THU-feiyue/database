@@ -10,7 +10,7 @@ def seatable_request(method: str, path: str, params: dict = None, data: dict = N
     # make request
     response = requests.request(
         method,
-        f"{api_base}/dtable-server/api/v1/dtables/{dtable_uuid}{path}",
+        f"{api_base}/api-gateway/api/v2/dtables/{dtable_uuid}{path}",
         params=params,
         data=data,
         headers={"Accept": "application/json", "Authorization": "Bearer " + base_token},
