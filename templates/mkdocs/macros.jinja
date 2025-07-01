@@ -43,11 +43,13 @@
 {%- endmacro %}
 
 {% macro get_area_tags(areas, same_page=false) -%}
+{% if areas -%}
 <div class="md-tags">
 {%- for area in areas | sort -%}
 {{ get_area_link(area, same_page) }}
 {%- endfor -%}
 </div>
+{%- endif -%}
 {%- endmacro %}
 
 {% macro make_metric_card(title, icon) %}

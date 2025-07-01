@@ -127,6 +127,8 @@ class Frontend:
             for applicant in applicants:
                 applicant = all_applicants[applicant]
                 areas = applicant["申请方向"]
+                if not areas:
+                    continue
                 for area in areas:
                     all_areas.setdefault(area, []).append((term, applicant["_id"]))
 
