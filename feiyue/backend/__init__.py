@@ -14,18 +14,27 @@ def get_all_rows(api_key: str) -> tuple[dict, dict, dict, dict]:
     all_applicants = api.get_all_rows("申请人")
     all_programs = api.get_all_rows("项目")
     all_datapoints = api.get_all_rows("数据点")
-    _rebuild_relations(all_applicants, all_datapoints)
+    _rebuild_relations(all_applicants, all_datapoints, all_programs)
 
     return all_applicants, all_datapoints, all_programs, all_majors
 
 
-def _rebuild_relations(applicants: dict, datapoints: dict):
+def _rebuild_relations(applicants: dict, datapoints: dict, programs: dict):
     # applicant -> datapoints
     for applicant in applicants.values():
         applicant["数据点"] = []
     for id, datapoint in datapoints.items():
         if len(datapoint.get("申请人", [])) > 0:
-            applicants[datapoint["申请人"][0]]["数据点"].append(id)
+            applicants[datapoint["申请人"][0]["row_id"]]["数据点"].append(id)
+
+    # program -> datapoints
+    for program in programs.values():
+        program["数据点"] = []
+    for id, datapoint in datapoints.items():
+        if len(datapoint.get("项目", [])) > 0:
+            program_id = datapoint["项目"][0]["row_id"]
+            if program_id in programs:
+                programs[program_id]["数据点"].append(id)
 
 
 def term_value(year: int, term: str) -> float:
@@ -66,7 +75,7 @@ def filter_out_invalid(
                     has_chosen = True
         if not has_chosen:
             return False
-        if applicant["专业"][0] not in majors:
+        if applicant["专业"][0]["row_id"] not in majors:
             return False
         return True
 
@@ -102,10 +111,10 @@ def filter_out_invalid(
         if not valid:
             return False
         for applicant in datapoint["申请人"]:
-            if applicant not in applicants:
+            if applicant["row_id"] not in applicants:
                 has_invalid = True
                 datapoint["申请人"].remove(applicant)
-        if datapoint["项目"][0] not in programs:
+        if datapoint["项目"][0]["row_id"] not in programs:
             return False
         return True
 
@@ -122,7 +131,7 @@ def filter_out_invalid(
         if not valid:
             return False
         for applicant in major["申请人"]:
-            if applicant not in applicants:
+            if applicant["row_id"] not in applicants:
                 has_invalid = True
                 major["申请人"].remove(applicant)
         return True

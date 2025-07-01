@@ -46,7 +46,7 @@ def get_duplicate_datapoints_of_applicants(
             program
             for program, count in collections.Counter(
                 [
-                    programs[datapoints[dp]["项目"][0]]["ID"]
+                    programs[datapoints[dp]["项目"][0]["row_id"]]["ID"]
                     for dp in applicant["数据点"]
                     if datapoints[dp]["项目"]
                 ]

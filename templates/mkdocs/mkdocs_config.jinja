@@ -80,7 +80,7 @@ nav:
             [
                 {% for applicant in term_applicants -%}
                     {% set applicant = all_applicants[applicant] -%}
-                    "{{ get_applicant_desc(applicant, "", show_term=false) }}<small> / {{ all_majors[applicant["专业"][0]]["院系"]}}</small>
+                    "{{ get_applicant_desc(applicant, "", show_term=false) }}<small> / {{ all_majors[applicant["专业"][0]["row_id"]]["院系"]}}</small>
                     {%- if "__destination" in applicant %}<br><small><code>{{ get_program_desc(all_programs[applicant["__destination"]], show_icon=false) }}
                     {%- endif -%}</code></small>": "applicant/{{ applicant["ID"] }}.md"{% if loop.index != term_applicants|length %},{% endif %}
                 {% endfor %}

@@ -11,8 +11,8 @@
 
 | 申请人 | 专业 | 申请方向 | 去向 |
 | --- | --- | --- | --- |
-{% for applicant in term_applicants | sort(attribute="专业") -%}
-{%- set major = majors[applicant["专业"][0]] -%}
+{% for applicant in term_applicants -%}
+{%- set major = majors[applicant["专业"][0]["row_id"]] -%}
 | {{ get_applicant_link(applicant, "", false) }} | {{ get_major_link(major, show_dept=false) }} <small>{{ major["院系"] }}</small> | {{ get_area_tags(applicant["申请方向"]) }} |
 {%- if "__destination" in applicant -%}
 {{ get_program_link(programs[applicant["__destination"]], show_icon=true) }}

@@ -123,10 +123,10 @@ class LatexFrontend(Frontend):
             program_datapoints = [
                 datapoint
                 for datapoint in all_datapoints.values()
-                if datapoint["项目"][0] == program["_id"]
+                if datapoint["项目"][0]["row_id"] == program["_id"]
             ]
             for datapoint in program_datapoints:
-                datapoint["申请人"] = datapoint["申请人"][0]
+                datapoint["申请人"] = datapoint["申请人"][0]["row_id"]
 
             program_tex = self.program_template.render(
                 program=program,

@@ -39,7 +39,7 @@ comments: true
 | --- | --- | --- | --- |
 {% for applicant in term_applicants -%}
 {%- set datapoint = program_datapoints | selectattr("申请人", "equalto", applicant) | first -%}
-{%- set major = majors[applicants[applicant]["专业"][0]] -%}
+{%- set major = majors[applicants[applicant]["专业"][0]["row_id"]] -%}
 {{ get_applicant_link(applicants[applicant], "", false) }} | {{ get_major_link(major, show_dept=false) }} | {{ major["院系"] }} | {{ get_datapoint_status(datapoint) }}
 {% endfor %}
 {% endif %}

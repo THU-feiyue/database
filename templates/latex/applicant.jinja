@@ -1,7 +1,7 @@
 {% from "macros.jinja" import get_applicant_desc, get_major_link, get_program_desc, get_program_link, get_datapoint_status, get_area_tags %}
 
 \section{
-    {{ get_applicant_desc(applicant, majors[applicant["专业"][0]]["院系"]) }} {% if applicant["__destination"] -%}
+    {{ get_applicant_desc(applicant, majors[applicant["专业"][0]["row_id"]]["院系"]) }} {% if applicant["__destination"] -%}
     /\smaller{ {{ get_program_desc(programs[applicant["__destination"]]) }} }
     {%- endif %}
 }
@@ -15,7 +15,7 @@
 \begin{description}[leftmargin=!,labelwidth=\widthof{\bfseries TOEFL/IELTSX}]
 
     {% if applicant["专业"] -%}
-        \item[专业]{ {{ get_major_link(majors[applicant["专业"][0]], show_dept=false) }} }
+        \item[专业]{ {{ get_major_link(majors[applicant["专业"][0]["row_id"]], show_dept=false) }} }
     {%- endif %}
 
     {% if applicant["研究生专业"] -%}
@@ -116,7 +116,7 @@
     \endlastfoot
 {% for datapoint in applicant["数据点"] -%}
 {%- set datapoint = datapoints[datapoint] -%}
-    {{ get_program_link(programs[datapoint["项目"][0]]) }} & {{ datapoint["学年"] }} {{ datapoint["学期"] }} & {{ get_datapoint_status(datapoint) }} \\
+    {{ get_program_link(programs[datapoint["项目"][0]["row_id"]]) }} & {{ datapoint["学年"] }} {{ datapoint["学期"] }} & {{ get_datapoint_status(datapoint) }} \\
     {% if not loop.last -%}
     \midrule
     {%- endif %}

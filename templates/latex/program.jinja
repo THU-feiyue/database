@@ -26,7 +26,7 @@
     {% for applicant in term_applicants -%}
         {% set applicant = applicants[applicant] %}
         {%- set datapoint = program_datapoints | selectattr("申请人", "equalto", applicant["_id"]) | first -%}
-        {%- set major = majors[applicant["专业"][0]] -%}
+        {%- set major = majors[applicant["专业"][0]["row_id"]] -%}
         {{ get_applicant_link(applicant, "") }} & {{ get_major_link(major, show_dept=false) }} & {{ major["院系"] }} &
         {%- if datapoint %}{{ get_datapoint_status(datapoint) }}{% endif %} \\
         {% if not loop.last %}\midrule{% endif %}

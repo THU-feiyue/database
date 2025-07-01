@@ -54,7 +54,8 @@ class Frontend:
                     [
                         applicant
                         for applicant in applicants
-                        if all_applicants[applicant]["专业"][0] == major["_id"]
+                        if all_applicants[applicant]["专业"][0]["row_id"]
+                        == major["_id"]
                     ],
                 )
                 for term, applicants in self.applicants_by_term
@@ -64,16 +65,16 @@ class Frontend:
             major["__program_count"] = 0
             gpas = []
             for applicant in major.get("申请人", []):
-                applicant = all_applicants[applicant]
+                applicant = all_applicants[applicant["row_id"]]
                 for datapoint in applicant.get("数据点", []):
                     datapoint = all_datapoints[datapoint]
-                    if datapoint["项目"][0] not in major["__programs"]:
-                        major["__programs"][datapoint["项目"][0]] = 0
-                    major["__programs"][datapoint["项目"][0]] += 1
+                    if datapoint["项目"][0]["row_id"] not in major["__programs"]:
+                        major["__programs"][datapoint["项目"][0]["row_id"]] = 0
+                    major["__programs"][datapoint["项目"][0]["row_id"]] += 1
                     major["__program_count"] += 1
 
                     if "最终去向" in datapoint and datapoint["最终去向"]:
-                        applicant["__destination"] = datapoint["项目"][0]
+                        applicant["__destination"] = datapoint["项目"][0]["row_id"]
 
                 if applicant.get("GPA") is not None:
                     gpas.append(applicant["GPA"])
@@ -94,7 +95,8 @@ class Frontend:
                         applicant
                         for applicant in applicants
                         if any(
-                            all_datapoints[datapoint]["项目"][0] == program["_id"]
+                            all_datapoints[datapoint]["项目"][0]["row_id"]
+                            == program["_id"]
                             for datapoint in all_applicants[applicant]["数据点"]
                         )
                     ],
@@ -110,16 +112,23 @@ class Frontend:
                 continue
             self.applicants_by_term.setdefault(
                 (datapoint["学年"], datapoint["学期"]), set()
-            ).add((datapoint["申请人"][0]))
+            ).add((datapoint["申请人"][0]["row_id"]))
 
         self.applicants_by_term = sorted(
             [
-                (term, sorted(term_applicants, key=lambda x: applicants[x]["专业"]))
+                (
+                    term,
+                    sorted(
+                        term_applicants,
+                        key=lambda x: applicants[x]["专业"][0]["row_id"],
+                    ),
+                )
                 for term, term_applicants in self.applicants_by_term.items()
             ],
             key=lambda x: term_value(*x[0]),
             reverse=True,
         )
+        print(self.applicants_by_term)
 
     def _get_areas(self, all_applicants: dict) -> dict:
         all_areas: dict[str, list] = {}

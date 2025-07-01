@@ -53,7 +53,12 @@ def get_all_rows(table_name: str):
         response = seatable_request(
             "GET",
             "/rows",
-            {"table_name": table_name, "start": query_start, "limit": BATCH_SIZE},
+            {
+                "table_name": table_name,
+                "start": query_start,
+                "limit": BATCH_SIZE,
+                "convert_keys": True,
+            },
         )
 
         for row in response["rows"]:
